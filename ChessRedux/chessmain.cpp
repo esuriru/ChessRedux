@@ -468,15 +468,13 @@ public:
         pieceMove((std::make_pair(chessNotationtranslatechar(playerinput[0]), atoi(&playerinput[1]) - 8)), std::make_pair(8-atoi(&playerinput[5]), chessNotationtranslatechar(playerinput[4])));
         //pieceMove(std::make_pair(chessNotationtranslatechar(playerinput[0]) - 1, atoi(&playerinput[1])), std::make_pair(chessNotationtranslatechar(playerinput[4]) - 1, atoi(&playerinput[5])));
         //by the way, pair input is basically like '1a' because rest of program is program with .first being x and .second being y
-        //test knight by b1->c3
-        //b1 = (1, 0) b -> 1 1 -> 0
-        //c3 = (2, 2) c -> 2 3 -> 2
-        //b8 = (1, 0)
-        //c6 = (2, 2)
+        //test knight by b8->c6, keeping these comments here in case some conversion goes awry
+
         std::cout << "break";
     }
     int chessNotationtranslatechar(char a) {
         return int(a) - 97;
+
     }
 };
 
