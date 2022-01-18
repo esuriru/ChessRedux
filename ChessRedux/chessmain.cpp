@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <array>
 
 
 enum class PieceType { PAWN, BISHOP, KNIGHT, ROOK, QUEEN, KING, EMPTY };
@@ -19,9 +20,17 @@ private:
     bool firstMove;
 
 public:
-    
-    ChessPiece(PieceType type){
+    ChessPiece() {
+        piecetype = PieceType::EMPTY;
+        colour = Colour::BLACK;
+        pieceRepresentation = ' ';
+        pieceLocation = std::make_pair(NULL, NULL);
         firstMove = true;
+
+    }
+    ChessPiece(PieceType type, Colour colourinput) {
+        firstMove = true;
+        colour = colourinput;
         piecetype = type;
         switch (type) {
             //invalid moves are also included
@@ -155,12 +164,12 @@ public:
                 horizontalMove.first = pieceLocation.first - i;
                 validMoves.push_back(horizontalMove);
             }
-            for (int i = 0; verticalMove.first == 7; i++)
+            for (int i = 0; verticalMove.second == 7; i++)
             {
                 verticalMove.second = pieceLocation.second + i;
                 validMoves.push_back(verticalMove);
             }
-            for (int i = 0; verticalMove.first == 0; i++)
+            for (int i = 0; verticalMove.second == 0; i++)
             {
                 verticalMove.second = pieceLocation.second - i;
                 validMoves.push_back(verticalMove);
@@ -169,6 +178,7 @@ public:
 
         case PieceType::EMPTY:
         {
+            pieceRepresentation = ' ';
             validMoves.clear();
             //it's empty lol
         }
@@ -207,53 +217,58 @@ public:
     }
 };
 
+
 class ChessBoard {
 private:
-    std::vector<std::vector<ChessPiece>> board;
-    std::vector<std::vector<ChessPiece>>::iterator x;
-    std::vector<ChessPiece>::iterator y;
+    //std::vector<std::vector<ChessPiece>> board;
+    ChessPiece arrayboard[8][8];
+
 
 public:
     ChessBoard() {
-        board[8][8];
-        ChessPiece whiteRook1 = ChessPiece(PieceType::ROOK);
+        ChessPiece emptySpace1 = ChessPiece(PieceType::EMPTY, Colour::BLACK);
+        emptySpace1.setPieceLocation(std::make_pair(3, 0));
+        setPiece(&emptySpace1);
+        ChessPiece whiteRook1 = ChessPiece(PieceType::ROOK, Colour::WHITE);
         whiteRook1.setPieceLocation(std::make_pair(0, 0));
-        board[whiteRook1.getPieceLocation().first].push_back(whiteRook1);
+        setPiece(&whiteRook1);
+        //board[whiteRook1.getPieceLocation().first].push_back(whiteRook1);
     }
     void showBoard() {
         //create the board
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board[i].size(); j++)
+
+        for (int i = 0; i < sizeof(arrayboard); i++) {
+            for (int j = 0; j < sizeof(arrayboard[i]); j++)
             {
-                std::cout << board[i][j].getPieceRepresentation();
+                std::cout << arrayboard[i][j].getPieceRepresentation();
             }            
         }
     }
-    std::vector<std::vector<ChessPiece>> getBoard() {
-        return board;
-    }
     void resetBoard();
     bool isTherePieceHere(std::pair<int, int> location) {
-        switch (board[location.first][location.second].getPieceType()) {
+        switch (arrayboard[location.first][location.second].getPieceType()) {
         
         default:
             return true;
         }
     }
     ChessPiece getPiece(std::pair<int, int> chessPieceLocation) {
-        return board[chessPieceLocation.first][chessPieceLocation.second];
+        return arrayboard[chessPieceLocation.first][chessPieceLocation.second];
     }
-    void setPiece(std::pair<int, int> chessPieceLocation, std::pair<int, int> newLocation) {
+    void setPiece(ChessPiece* input) {
+        arrayboard[(*input).getPieceLocation().first][(*input).getPieceLocation().second] = *input;
+    }
+    void movePiece(std::pair<int, int> chessPieceLocation, std::pair<int, int> newLocation) {
         if (isTherePieceHere(chessPieceLocation) != 1) {
-            board[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
+            arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
         }
         else {
-            if (board[chessPieceLocation.first][chessPieceLocation.second].getColour() == board[newLocation.first][newLocation.second].getColour()) {
+            if (arrayboard[chessPieceLocation.first][chessPieceLocation.second].getColour() == arrayboard[newLocation.first][newLocation.second].getColour()) {
                 std::cout << "not possible"; //.. is trying to take their own team
             }
             else {
-                board[newLocation.first][newLocation.second] = ChessPiece(PieceType::EMPTY);
-                board[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
+                arrayboard[newLocation.first][newLocation.second] = ChessPiece(PieceType::EMPTY, Colour::BLACK);
+                arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
             }
         }
     }
@@ -283,7 +298,7 @@ public:
     void pieceMove(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
         if (validNewPieceLocation(pieceLocation, newPieceLocation) && chessboard.isTherePieceHere(pieceLocation)) {
             PieceType movingPieceType = chessboard.getPiece(pieceLocation).getPieceType();
-            chessboard.setPiece(pieceLocation, newPieceLocation);
+            chessboard.movePiece(pieceLocation, newPieceLocation);
             /*switch (movingPieceType) {
             case PieceType::PAWN:
                 //is this valid? return true if yes, false if no
@@ -296,17 +311,21 @@ public:
         }
     };
 
-    static void newGame() {
+    void newGame() {
         std::cout << "hi!" << std::endl;
-        /*for (int i = 0; i < chessboard.getPiece(std::make_pair(0, 0)).getValidMoves().size(); i++)
+        /*
+        for (int i = 0; i < chessboard.getPiece(std::make_pair(0, 0)).getValidMoves().size(); i++)
         {
             std::cout << "\n" << chessboard.getBoard()[0][0].getValidMoves()[i].first << "," << chessboard.getBoard()[0][0].getValidMoves()[i].second;
-        }*/
+        }
+        */
+        chessboard.showBoard();
     }
 };
 
 int main()
 {
-    ChessGame::newGame();
+    ChessGame game;
+    game.newGame();
 
 }
