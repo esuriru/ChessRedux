@@ -239,9 +239,6 @@ public:
     ChessBoard() {
         //the creation of pieces
         //empty spaces
-        ChessPiece emptySpace1 = ChessPiece(PieceType::EMPTY, Colour::BLACK);
-        emptySpace1.setPieceLocation(std::make_pair(0, 2));
-        setPiece(emptySpace1);
 
         //white team
         ChessPiece whiteRook1 = ChessPiece(PieceType::ROOK, Colour::WHITE);
@@ -349,9 +346,9 @@ public:
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++)
             {
-                std::cout << " " << arrayboard[j][i].getPieceRepresentation() << " ";
+                std::cout << "  " << arrayboard[j][i].getPieceRepresentation() << "  ";
             }
-            std::cout << "\n";
+            std::cout << "\n\n";
         }
     }
 
@@ -413,6 +410,7 @@ public:
         if (validNewPieceLocation(pieceLocation, newPieceLocation) && chessboard.isTherePieceHere(pieceLocation)) {
             PieceType movingPieceType = chessboard.getPiece(pieceLocation).getPieceType();
             chessboard.movePiece(pieceLocation, newPieceLocation);
+            chessboard.showBoard();
             /*switch (movingPieceType) {
             case PieceType::PAWN:
                 //is this valid? return true if yes, false if no
@@ -430,7 +428,8 @@ public:
         return chessboard;
     }
     void newGame() {
-        std::cout << "hi!" << std::endl;
+        std::cout << "  " << "a" << "    " << "b" << "    " << "c" << "    " << "d" << "    " << "e" << "    " << "f" << "    " << "g" << "    " << "h" << std::endl;
+
         /*
         for (int i = 0; i < chessboard.getPiece(std::make_pair(0, 0)).getValidMoves().size(); i++)
         {
@@ -438,6 +437,15 @@ public:
         }
         */
         chessboard.showBoard();
+        std::string playerinput;
+        std::getline(std::cin, playerinput);
+        //example of move: a1->a2
+
+        pieceMove(std::make_pair(chessNotationtranslatechar(playerinput[0]), int(playerinput[1])), std::make_pair(chessNotationtranslatechar(playerinput[4]), int(playerinput[5])));
+
+    }
+    int chessNotationtranslatechar(char a) {
+        return int(a) - 97;
     }
 };
 
