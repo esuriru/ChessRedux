@@ -204,7 +204,7 @@ public:
     void setColour(Colour input) {
         colour = input;
     }
-    std::pair<int, int> getPieceLocation(){
+    std::pair<int, int> getPieceLocation() {
         return pieceLocation;
     }
     void setPieceLocation(std::pair<int, int> input) {
@@ -235,17 +235,17 @@ public:
     void showBoard() {
         //create the board
 
-        for (int i = 0; i < sizeof(arrayboard); i++) {
-            for (int j = 0; j < sizeof(arrayboard[i]); j++)
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++)
             {
                 std::cout << arrayboard[i][j].getPieceRepresentation();
-            }            
+            }
         }
     }
     void resetBoard();
     bool isTherePieceHere(std::pair<int, int> location) {
         switch (arrayboard[location.first][location.second].getPieceType()) {
-        
+
         default:
             return true;
         }
