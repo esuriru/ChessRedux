@@ -294,63 +294,64 @@ public:
         setPiece(whitePawn8);
         //black pieces
         ChessPiece blackRook1 = ChessPiece(PieceType::ROOK, Colour::BLACK);
-        blackRook1.setPieceLocation(std::make_pair(0, 0));
+        blackRook1.setPieceLocation(std::make_pair(0, 7));
         setPiece(blackRook1);
         ChessPiece blackRook2 = ChessPiece(PieceType::ROOK, Colour::BLACK);
-        blackRook2.setPieceLocation(std::make_pair(7, 0));
+        blackRook2.setPieceLocation(std::make_pair(7, 7));
         setPiece(blackRook2);
         ChessPiece blackKnight1 = ChessPiece(PieceType::KNIGHT, Colour::BLACK);
-        blackKnight1.setPieceLocation(std::make_pair(1, 0));
+        blackKnight1.setPieceLocation(std::make_pair(1, 7));
         setPiece(blackKnight1);
         ChessPiece blackKnight2 = ChessPiece(PieceType::KNIGHT, Colour::BLACK);
-        blackKnight2.setPieceLocation(std::make_pair(6, 0));
+        blackKnight2.setPieceLocation(std::make_pair(6, 7));
         setPiece(blackKnight2);
         ChessPiece blackBishop1 = ChessPiece(PieceType::BISHOP, Colour::BLACK);
-        blackBishop1.setPieceLocation(std::make_pair(2, 0));
+        blackBishop1.setPieceLocation(std::make_pair(2, 7));
         setPiece(blackBishop1);
         ChessPiece blackBishop2 = ChessPiece(PieceType::BISHOP, Colour::BLACK);
-        blackBishop2.setPieceLocation(std::make_pair(5, 0));
+        blackBishop2.setPieceLocation(std::make_pair(5, 7));
         setPiece(blackBishop2);
         ChessPiece blackKing1 = ChessPiece(PieceType::KING, Colour::BLACK);
-        blackKing1.setPieceLocation(std::make_pair(4, 0));
+        blackKing1.setPieceLocation(std::make_pair(4, 7));
         setPiece(blackKing1);
         ChessPiece blackQueen1 = ChessPiece(PieceType::QUEEN, Colour::BLACK);
-        blackQueen1.setPieceLocation(std::make_pair(3, 0));
+        blackQueen1.setPieceLocation(std::make_pair(3, 7));
         setPiece(blackQueen1);
         ChessPiece blackPawn1 = ChessPiece(PieceType::PAWN, Colour::BLACK);
-        blackPawn1.setPieceLocation(std::make_pair(0, 1));
+        blackPawn1.setPieceLocation(std::make_pair(0, 6));
         setPiece(blackPawn1);
         ChessPiece blackPawn2 = ChessPiece(PieceType::PAWN, Colour::BLACK);
-        blackPawn2.setPieceLocation(std::make_pair(1, 1));
+        blackPawn2.setPieceLocation(std::make_pair(1, 6));
         setPiece(blackPawn2);
         ChessPiece blackPawn3 = ChessPiece(PieceType::PAWN, Colour::BLACK);
-        blackPawn3.setPieceLocation(std::make_pair(2, 1));
+        blackPawn3.setPieceLocation(std::make_pair(2, 6));
         setPiece(blackPawn3);
         ChessPiece blackPawn4 = ChessPiece(PieceType::PAWN, Colour::BLACK);
-        blackPawn4.setPieceLocation(std::make_pair(3, 1));
+        blackPawn4.setPieceLocation(std::make_pair(3, 6));
         setPiece(blackPawn4);
         ChessPiece blackPawn5 = ChessPiece(PieceType::PAWN, Colour::BLACK);
-        blackPawn5.setPieceLocation(std::make_pair(4, 1));
+        blackPawn5.setPieceLocation(std::make_pair(4, 6));
         setPiece(blackPawn5);
         ChessPiece blackPawn6 = ChessPiece(PieceType::PAWN, Colour::BLACK);
-        blackPawn6.setPieceLocation(std::make_pair(5, 1));
+        blackPawn6.setPieceLocation(std::make_pair(5, 6));
         setPiece(blackPawn6);
         ChessPiece blackPawn7 = ChessPiece(PieceType::PAWN, Colour::BLACK);
-        blackPawn7.setPieceLocation(std::make_pair(6, 1));
+        blackPawn7.setPieceLocation(std::make_pair(6, 6));
         setPiece(blackPawn7);
         ChessPiece blackPawn8 = ChessPiece(PieceType::PAWN, Colour::BLACK);
-        blackPawn8.setPieceLocation(std::make_pair(7, 1));
+        blackPawn8.setPieceLocation(std::make_pair(7, 6));
         setPiece(blackPawn8);
         
     }
     void showBoard() {
         //create the board
 
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++)
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++)
             {
-                std::cout << arrayboard[i][j].getPieceRepresentation();
+                std::cout << " " << arrayboard[j][i].getPieceRepresentation() << " ";
             }
+            std::cout << "\n";
         }
     }
 
