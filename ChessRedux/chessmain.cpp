@@ -8,8 +8,6 @@
 enum class PieceType { PAWN, BISHOP, KNIGHT, ROOK, QUEEN, KING, EMPTY };
 enum class Colour { BLACK, WHITE };
 
-
-
 class ChessPiece {
 private:
     PieceType piecetype;
@@ -228,10 +226,10 @@ public:
     ChessBoard() {
         ChessPiece emptySpace1 = ChessPiece(PieceType::EMPTY, Colour::BLACK);
         emptySpace1.setPieceLocation(std::make_pair(3, 0));
-        setPiece(&emptySpace1);
+        setPiece(emptySpace1);
         ChessPiece whiteRook1 = ChessPiece(PieceType::ROOK, Colour::WHITE);
         whiteRook1.setPieceLocation(std::make_pair(0, 0));
-        setPiece(&whiteRook1);
+        setPiece(whiteRook1);
         //board[whiteRook1.getPieceLocation().first].push_back(whiteRook1);
     }
     void showBoard() {
@@ -255,8 +253,8 @@ public:
     ChessPiece getPiece(std::pair<int, int> chessPieceLocation) {
         return arrayboard[chessPieceLocation.first][chessPieceLocation.second];
     }
-    void setPiece(ChessPiece* input) {
-        arrayboard[(*input).getPieceLocation().first][(*input).getPieceLocation().second] = *input;
+    void setPiece(ChessPiece input) {
+        arrayboard[input.getPieceLocation().first][input.getPieceLocation().second] = input;
     }
     void movePiece(std::pair<int, int> chessPieceLocation, std::pair<int, int> newLocation) {
         if (isTherePieceHere(chessPieceLocation) != 1) {
@@ -309,6 +307,7 @@ public:
 
             }*/
         }
+
     };
 
     void newGame() {
