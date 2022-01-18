@@ -103,12 +103,12 @@ public:
                 horizontalMove.first = pieceLocation.first - i;
                 validMoves.push_back(horizontalMove);
             }
-            for (int i = 0; verticalMove.first == 7; i++)
+            for (int i = 0; verticalMove.second == 7; i++)
             {
                 verticalMove.second = pieceLocation.second + i;
                 validMoves.push_back(verticalMove);
             }
-            for (int i = 0; verticalMove.first == 0; i++)
+            for (int i = 0; verticalMove.second == 0; i++)
             {
                 verticalMove.second = pieceLocation.second - i;
                 validMoves.push_back(verticalMove);
