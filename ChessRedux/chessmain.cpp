@@ -41,11 +41,14 @@ public:
         colour = colourinput;
         piecetype = type;
         pieceLocation = inputposition;
+        
         switch (piecetype) {
             //invalid moves are also included
         case PieceType::KNIGHT:
         {
             pieceRepresentation = 'N';
+            
+            /*
             //add vertical Ls        
             std::pair<int, int> upleftL;
             upleftL.first = pieceLocation.first - 1;
@@ -68,13 +71,14 @@ public:
             validMoves.push_back(std::make_pair(pieceLocation.first + 2, pieceLocation.second - 1));
             validMoves.push_back(std::make_pair(pieceLocation.first - 2, pieceLocation.second + 1));
             validMoves.push_back(std::make_pair(pieceLocation.first - 2, pieceLocation.second - 1));
-            
+            */
             break;
         }
         case PieceType::BISHOP:
         {
 
             pieceRepresentation = 'B';
+            /*
             std::pair<int, int> rightdiagonalMove = pieceLocation;
             std::pair<int, int> leftdiagonalMove = pieceLocation;
             int add = 0;
@@ -136,35 +140,13 @@ public:
 
 
 
-            /*for (int i = 1; rightdiagonalMove.first < 7; i++)
-            {
-                rightdiagonalMove.first = pieceLocation.first + i;
-                rightdiagonalMove.second = pieceLocation.second - i;
-                validMoves.push_back(rightdiagonalMove);
-            }
-            for (int i = 1; rightdiagonalMove.second < 7; i++)
-            {
-                rightdiagonalMove.first = pieceLocation.first + i;
-                rightdiagonalMove.second = pieceLocation.second + i;
-                validMoves.push_back(rightdiagonalMove);
-            }
-            for (int i = 1; leftdiagonalMove.first < 0; i++)
-            {
-                leftdiagonalMove.first = pieceLocation.first - i;
-                leftdiagonalMove.second = pieceLocation.second - i;
-                validMoves.push_back(leftdiagonalMove);
-            }
-            for (int i = 1; leftdiagonalMove.second < 7; i++)
-            {
-                leftdiagonalMove.first = pieceLocation.first - i;
-                leftdiagonalMove.second = pieceLocation.second + i;
-                validMoves.push_back(leftdiagonalMove);
-            }*/
+            */
             break;
         }
         case PieceType::QUEEN:
         {
             pieceRepresentation = 'Q';
+            /*
             std::pair<int, int> horizontalMove = pieceLocation;
             std::pair<int, int> verticalMove = pieceLocation;
             std::pair<int, int> rightdiagonalMove = pieceLocation;
@@ -266,10 +248,13 @@ public:
                 validMoves.push_back(leftdiagonalMove);
                 add++;
             } while (leftdiagonalMove.first != 7);
+            */
+            break;
         }
         case PieceType::KING:
         {
             pieceRepresentation = 'K';
+            /*
             validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
             validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
             validMoves.push_back(std::make_pair(pieceLocation.first + 1, pieceLocation.second));
@@ -278,12 +263,14 @@ public:
             validMoves.push_back(std::make_pair(pieceLocation.first - 1, pieceLocation.second + 1));
             validMoves.push_back(std::make_pair(pieceLocation.first - 1, pieceLocation.second - 1));
             validMoves.push_back(std::make_pair(pieceLocation.first + 1, pieceLocation.second - 1));
+            */
             break;
         }
 
         case PieceType::PAWN:
         {
             pieceRepresentation = 'P';
+            /*
             if (colour == Colour::BLACK) {
                 if (firstMove) {
                     validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
@@ -304,11 +291,13 @@ public:
                     validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
                 }
             }
+            */
             break;
         }
         case PieceType::ROOK:
         {
             pieceRepresentation = 'R';
+            /*
             std::pair<int, int> horizontalMove = pieceLocation;
             std::pair<int, int> verticalMove = pieceLocation;
             int add;
@@ -349,8 +338,9 @@ public:
                 validMoves.push_back(verticalMove);
                 add++;
 
-            } while (verticalMove.second != 7);
+            } while (verticalMove.second != 7);*/
             break;
+            
         }
 
         case PieceType::EMPTY:
@@ -374,6 +364,13 @@ public:
     std::vector<std::pair<int, int>> getValidMoves() {
         return validMoves;
     }
+    void setValidMoves(std::vector<std::pair<int, int>> input) {
+        validMoves.clear();
+        for (int i = 0; i < input.size(); i++)
+        {
+            validMoves.push_back(input[i]);
+        }
+    }
     PieceType getPieceType() {
         return piecetype;
     }
@@ -386,6 +383,7 @@ public:
     void setColour(Colour input) {
         colour = input;
     }
+    
     std::pair<int, int> getPieceLocation() {
         return pieceLocation;
     }
@@ -412,6 +410,7 @@ class ChessBoard {
 private:
     //std::vector<std::vector<ChessPiece>> board;
     ChessPiece arrayboard[8][8];
+    
 
 
 public:
@@ -422,70 +421,101 @@ public:
         //white team
         ChessPiece blackRook1 = ChessPiece(PieceType::ROOK, Colour::BLACK, std::make_pair(0, 0));
         setPiece(blackRook1);
+        reinstantiateValidMoves(blackRook1);
         ChessPiece blackRook2 = ChessPiece(PieceType::ROOK, Colour::BLACK, std::make_pair(7, 0));
         setPiece(blackRook2);
+        reinstantiateValidMoves(blackRook2);
         ChessPiece blackKnight1 = ChessPiece(PieceType::KNIGHT, Colour::BLACK, std::make_pair(1, 0));
         setPiece(blackKnight1);
+        reinstantiateValidMoves(blackKnight1);
         ChessPiece blackKnight2 = ChessPiece(PieceType::KNIGHT, Colour::BLACK, std::make_pair(6, 0));
         setPiece(blackKnight2);
+        reinstantiateValidMoves(blackKnight2);
         ChessPiece blackBishop1 = ChessPiece(PieceType::BISHOP, Colour::BLACK, std::make_pair(2, 0));
         setPiece(blackBishop1);
+        reinstantiateValidMoves(blackBishop1);
         ChessPiece blackBishop2 = ChessPiece(PieceType::BISHOP, Colour::BLACK, std::make_pair(5, 0));
         setPiece(blackBishop2);
+        reinstantiateValidMoves(blackBishop2);
         ChessPiece blackKing1 = ChessPiece(PieceType::KING, Colour::BLACK, std::make_pair(4, 0));
         setPiece(blackKing1);
+        reinstantiateValidMoves(blackKing1);
         ChessPiece blackQueen1 = ChessPiece(PieceType::QUEEN, Colour::BLACK, std::make_pair(3, 0));
         setPiece(blackQueen1);
+        reinstantiateValidMoves(blackQueen1);
         ChessPiece blackPawn1 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(0, 1));
         setPiece(blackPawn1);
+        reinstantiateValidMoves(blackPawn1);
         ChessPiece blackPawn2 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(1, 1));
         setPiece(blackPawn2);
+        reinstantiateValidMoves(blackPawn2);
         ChessPiece blackPawn3 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(2, 1));
         setPiece(blackPawn3);
+        reinstantiateValidMoves(blackPawn3);
         ChessPiece blackPawn4 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(3, 1));
         setPiece(blackPawn4);
+        reinstantiateValidMoves(blackPawn4);
         ChessPiece blackPawn5 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(4, 1));
         setPiece(blackPawn5);
+        reinstantiateValidMoves(blackPawn5);
         ChessPiece blackPawn6 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(5, 1));
         setPiece(blackPawn6);
+        reinstantiateValidMoves(blackPawn6);
         ChessPiece blackPawn7 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(6, 1));
         setPiece(blackPawn7);
+        reinstantiateValidMoves(blackPawn7);
         ChessPiece blackPawn8 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(7, 1));
         setPiece(blackPawn8);
+        reinstantiateValidMoves(blackPawn8);
         //black pieces
         ChessPiece whiteRook1 = ChessPiece(PieceType::ROOK, Colour::WHITE, std::make_pair(0, 7));
         setPiece(whiteRook1);
+        reinstantiateValidMoves(whiteRook1);
         ChessPiece whiteRook2 = ChessPiece(PieceType::ROOK, Colour::WHITE, std::make_pair(7, 7));
         setPiece(whiteRook2);
+        reinstantiateValidMoves(whiteRook2);
         ChessPiece whiteKnight1 = ChessPiece(PieceType::KNIGHT, Colour::WHITE, std::make_pair(1, 7));
         setPiece(whiteKnight1);
+        reinstantiateValidMoves(whiteKnight1);
         ChessPiece whiteKnight2 = ChessPiece(PieceType::KNIGHT, Colour::WHITE, std::make_pair(6, 7));
         setPiece(whiteKnight2);
+        reinstantiateValidMoves(whiteKnight2);
         ChessPiece whiteBishop1 = ChessPiece(PieceType::BISHOP, Colour::WHITE, std::make_pair(2, 7));
         setPiece(whiteBishop1);
+        reinstantiateValidMoves(whiteBishop1);
         ChessPiece whiteBishop2 = ChessPiece(PieceType::BISHOP, Colour::WHITE, std::make_pair(5, 7));
         setPiece(whiteBishop2);
+        reinstantiateValidMoves(whiteBishop2);
         ChessPiece whiteKing1 = ChessPiece(PieceType::KING, Colour::WHITE, std::make_pair(4, 7));
         setPiece(whiteKing1);
+        reinstantiateValidMoves(whiteKing1);
         ChessPiece whiteQueen1 = ChessPiece(PieceType::QUEEN, Colour::WHITE, std::make_pair(3, 7));
         setPiece(whiteQueen1);
+        reinstantiateValidMoves(whiteQueen1);
         ChessPiece whitePawn1 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(0, 6));
         setPiece(whitePawn1);
+        reinstantiateValidMoves(whitePawn1);
         ChessPiece whitePawn2 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(1, 6));
         setPiece(whitePawn2);
+        reinstantiateValidMoves(whitePawn2);
         ChessPiece whitePawn3 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(2, 6));
         setPiece(whitePawn3);
+        reinstantiateValidMoves(whitePawn3);
         ChessPiece whitePawn4 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(3, 6));
         setPiece(whitePawn4);
+        reinstantiateValidMoves(whitePawn4);
         ChessPiece whitePawn5 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(4, 6));
         setPiece(whitePawn5);
+        reinstantiateValidMoves(whitePawn5);
         ChessPiece whitePawn6 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(5, 6));
         setPiece(whitePawn6);
+        reinstantiateValidMoves(whitePawn6);
         ChessPiece whitePawn7 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(6, 6));
         setPiece(whitePawn7);
+        reinstantiateValidMoves(whitePawn7);
         ChessPiece whitePawn8 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(7, 6));
         setPiece(whitePawn8);
-        
+        reinstantiateValidMoves(whitePawn8);
     }
     void showBoard() {
         //create the board
@@ -530,6 +560,337 @@ public:
     void setPiece(ChessPiece input) {
         arrayboard[input.getPieceLocation().first][input.getPieceLocation().second] = input;
     }
+    void reinstantiateValidMoves(ChessPiece input) {
+        std::pair<int, int> pieceLocation = input.getPieceLocation();
+        PieceType piecetype = input.getPieceType();
+        char pieceRepresentation = input.getPieceRepresentation();
+        Colour colour = input.getColour();
+        std::vector < std::pair<int, int>> newvalidMoves;
+
+        switch (piecetype) {
+            //invalid moves are also included
+        case PieceType::KNIGHT:
+        {
+            pieceRepresentation = 'N';
+            //add vertical Ls        
+            std::pair<int, int> upleftL;
+            upleftL.first = pieceLocation.first - 1;
+            upleftL.second = pieceLocation.second + 2;
+            newvalidMoves.push_back(upleftL);
+            std::pair<int, int> uprightL;
+            uprightL.first = pieceLocation.first + 1;
+            uprightL.second = pieceLocation.second + 2;
+            newvalidMoves.push_back(uprightL);
+            std::pair<int, int> downleftL;
+            downleftL.first = pieceLocation.first + 1;
+            downleftL.second = pieceLocation.second - 2;
+            newvalidMoves.push_back(downleftL);
+            std::pair<int, int> downrightL;
+            downrightL.first = pieceLocation.first - 1;
+            downrightL.second = pieceLocation.second - 2;
+            newvalidMoves.push_back(downrightL);
+            //add horizontal Ls
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first + 2, pieceLocation.second + 1));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first + 2, pieceLocation.second - 1));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first - 2, pieceLocation.second + 1));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first - 2, pieceLocation.second - 1));
+
+            break;
+        }
+        case PieceType::BISHOP:
+        {
+
+            pieceRepresentation = 'B';
+            std::pair<int, int> rightdiagonalMove = pieceLocation;
+            std::pair<int, int> leftdiagonalMove = pieceLocation;
+            int add = 0;
+            do {
+                //going up and right
+                if (rightdiagonalMove.first == 7) {
+                    break;
+                }
+                rightdiagonalMove.first = pieceLocation.first + add;
+                rightdiagonalMove.second = pieceLocation.second - add;
+                newvalidMoves.push_back(rightdiagonalMove);
+                add++;
+
+            } while (rightdiagonalMove.second != 0);
+            //then
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going down and left
+                if (rightdiagonalMove.first == 0) {
+                    break;
+                }
+                rightdiagonalMove.first = pieceLocation.first - add;
+                rightdiagonalMove.second = pieceLocation.second + add;
+                newvalidMoves.push_back(rightdiagonalMove);
+                add++;
+            } while (rightdiagonalMove.second != 7);
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going up and left
+                if (leftdiagonalMove.first == 0) {
+
+                    break;
+                }
+                leftdiagonalMove.first = pieceLocation.first - add;
+                leftdiagonalMove.second = pieceLocation.second - add;
+                newvalidMoves.push_back(leftdiagonalMove);
+                add++;
+
+            } while (leftdiagonalMove.second != 0);
+            //then
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going down and right
+                if (leftdiagonalMove.second == 7) {
+
+                    break;
+                }
+                leftdiagonalMove.first = pieceLocation.first - add;
+                leftdiagonalMove.second = pieceLocation.second + add;
+                newvalidMoves.push_back(leftdiagonalMove);
+                add++;
+            } while (leftdiagonalMove.first != 7);
+
+
+
+            /*for (int i = 1; rightdiagonalMove.first < 7; i++)
+            {
+                rightdiagonalMove.first = pieceLocation.first + i;
+                rightdiagonalMove.second = pieceLocation.second - i;
+                newvalidMoves.push_back(rightdiagonalMove);
+            }
+            for (int i = 1; rightdiagonalMove.second < 7; i++)
+            {
+                rightdiagonalMove.first = pieceLocation.first + i;
+                rightdiagonalMove.second = pieceLocation.second + i;
+                newvalidMoves.push_back(rightdiagonalMove);
+            }
+            for (int i = 1; leftdiagonalMove.first < 0; i++)
+            {
+                leftdiagonalMove.first = pieceLocation.first - i;
+                leftdiagonalMove.second = pieceLocation.second - i;
+                newvalidMoves.push_back(leftdiagonalMove);
+            }
+            for (int i = 1; leftdiagonalMove.second < 7; i++)
+            {
+                leftdiagonalMove.first = pieceLocation.first - i;
+                leftdiagonalMove.second = pieceLocation.second + i;
+                newvalidMoves.push_back(leftdiagonalMove);
+            }*/
+            break;
+        }
+        case PieceType::QUEEN:
+        {
+            pieceRepresentation = 'Q';
+            std::pair<int, int> horizontalMove = pieceLocation;
+            std::pair<int, int> verticalMove = pieceLocation;
+            std::pair<int, int> rightdiagonalMove = pieceLocation;
+            std::pair<int, int> leftdiagonalMove = pieceLocation;
+
+            int add = 0;
+            do {
+                //going right
+                horizontalMove.first = pieceLocation.first + add;
+                newvalidMoves.push_back(horizontalMove);
+                add++;
+
+            } while (horizontalMove.first != 7);
+            add = 0;
+            horizontalMove = pieceLocation;
+            verticalMove = pieceLocation;
+            do {
+                //going left
+                horizontalMove.first = pieceLocation.first - add;
+                newvalidMoves.push_back(horizontalMove);
+                add++;
+
+            } while (horizontalMove.first != 0);
+            add = 0;
+            horizontalMove = pieceLocation;
+            verticalMove = pieceLocation;
+            do {
+                //going up
+                verticalMove.second = pieceLocation.second - add;
+                newvalidMoves.push_back(verticalMove);
+                add++;
+
+            } while (verticalMove.second != 0);
+            add = 0;
+            horizontalMove = pieceLocation;
+            verticalMove = pieceLocation;
+            do {
+                //going down
+                verticalMove.second = pieceLocation.second + add;
+                newvalidMoves.push_back(verticalMove);
+                add++;
+
+            } while (verticalMove.second != 7);
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going up and right
+                if (rightdiagonalMove.first == 7) {
+                    break;
+                }
+                rightdiagonalMove.first = pieceLocation.first + add;
+                rightdiagonalMove.second = pieceLocation.second - add;
+                newvalidMoves.push_back(rightdiagonalMove);
+                add++;
+
+            } while (rightdiagonalMove.second != 0);
+            //then
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going down and left
+                if (rightdiagonalMove.first == 0) {
+                    break;
+                }
+                rightdiagonalMove.first = pieceLocation.first - add;
+                rightdiagonalMove.second = pieceLocation.second + add;
+                newvalidMoves.push_back(rightdiagonalMove);
+                add++;
+            } while (rightdiagonalMove.second != 7);
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going up and left
+                if (leftdiagonalMove.first == 0) {
+
+                    break;
+                }
+                leftdiagonalMove.first = pieceLocation.first - add;
+                leftdiagonalMove.second = pieceLocation.second - add;
+                newvalidMoves.push_back(leftdiagonalMove);
+                add++;
+
+            } while (leftdiagonalMove.second != 0);
+            //then
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going down and right
+                if (leftdiagonalMove.second == 7) {
+
+                    break;
+                }
+                leftdiagonalMove.first = pieceLocation.first - add;
+                leftdiagonalMove.second = pieceLocation.second + add;
+                newvalidMoves.push_back(leftdiagonalMove);
+                add++;
+            } while (leftdiagonalMove.first != 7);
+        }
+        case PieceType::KING:
+        {
+            pieceRepresentation = 'K';
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first + 1, pieceLocation.second));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first - 1, pieceLocation.second));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first + 1, pieceLocation.second + 1));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first - 1, pieceLocation.second + 1));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first - 1, pieceLocation.second - 1));
+            newvalidMoves.push_back(std::make_pair(pieceLocation.first + 1, pieceLocation.second - 1));
+            break;
+        }
+
+        case PieceType::PAWN:
+        {
+            pieceRepresentation = 'P';
+            if (colour == Colour::BLACK) {
+                if (input.getfirstMove()) {
+                    newvalidMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
+                    newvalidMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 2));
+                    //going down
+                }
+                else {
+                    newvalidMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
+                }
+            }
+            else if (colour == Colour::WHITE) {
+                if (input.getfirstMove()) {
+                    //going up
+                    newvalidMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
+                    newvalidMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 2));
+                }
+                else {
+                    newvalidMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
+                }
+            }
+            break;
+        }
+        case PieceType::ROOK:
+        {
+            pieceRepresentation = 'R';
+            std::pair<int, int> horizontalMove = pieceLocation;
+            std::pair<int, int> verticalMove = pieceLocation;
+            int add;
+            add = 0;
+            do {
+                //going right
+                horizontalMove.first = pieceLocation.first + add;
+                newvalidMoves.push_back(horizontalMove);
+                add++;
+
+            } while (horizontalMove.first != 7);
+            add = 0;
+            horizontalMove = pieceLocation;
+            verticalMove = pieceLocation;
+            do {
+                //going left
+                horizontalMove.first = pieceLocation.first - add;
+                newvalidMoves.push_back(horizontalMove);
+                add++;
+
+            } while (horizontalMove.first != 0);
+            add = 0;
+            horizontalMove = pieceLocation;
+            verticalMove = pieceLocation;
+            do {
+                //going up
+                verticalMove.second = pieceLocation.second - add;
+                newvalidMoves.push_back(verticalMove);
+                add++;
+
+            } while (verticalMove.second != 0);
+            add = 0;
+            horizontalMove = pieceLocation;
+            verticalMove = pieceLocation;
+            do {
+                //going down
+                verticalMove.second = pieceLocation.second + add;
+                newvalidMoves.push_back(verticalMove);
+                add++;
+
+            } while (verticalMove.second != 7);
+            break;
+        }
+
+        case PieceType::EMPTY:
+        {
+            pieceRepresentation = ' ';
+            newvalidMoves.clear();
+            //it's empty lol
+            break;
+        }
+        default:
+            std::cout << "ERROR";
+        }
+        input.setValidMoves(newvalidMoves);
+    }
     void movePiece(std::pair<int, int> chessPieceLocation, std::pair<int, int> newLocation) {
         if (isTherePieceHere(newLocation) == 1) {
             //take the piece
@@ -569,13 +930,14 @@ public:
 class ChessGame {
 private:
     Colour currentTurn = Colour::WHITE;
+    bool restartMove = false;
     bool gameRunning = true;
     ChessBoard chessboard;
     bool validNewPieceLocation(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
-        for (int i = 0; i < chessboard.getPiece(pieceLocation).getValidMoves().size(); i++)
-        {
+        //for (int i = 0; i < chessboard.getPiece(pieceLocation).getValidMoves().size(); i++)
+        //{
 
-            if (newPieceLocation == chessboard.getPiece(pieceLocation).getValidMoves()[i]) {
+            //if (newPieceLocation == chessboard.getPiece(pieceLocation).getValidMoves()[i]) {
                 if (chessboard.getPiece(newPieceLocation).getPieceType() == PieceType::EMPTY) {
                     if (chessboard.getPiece(pieceLocation).getPieceType() != PieceType::KNIGHT) {
                         if (checkforSpace(pieceLocation, newPieceLocation)) {
@@ -599,15 +961,15 @@ private:
                 else {
                     std::cout << "error has occured, piece is not able to be moved";
                     return false;
-                    break;
+                    //break;
                 }
 
                 //if the movement is from one colour to another, and that chess piece location is in that type's valid moves, then return true
-            }
-            else {
-                continue;
-            }
-        }
+            //}
+            //else {
+            //    continue;
+            //}
+        //}
         return false;
     }
 
@@ -1017,6 +1379,9 @@ private:
                                     return false;
 
                                 }
+                                else {
+                                    return true;
+                                }
                             }
                             else if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1)))
                             {
@@ -1076,20 +1441,31 @@ private:
 public:
     void pieceMove(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
 
+        chessboard.reinstantiateValidMoves(chessboard.getPiece(pieceLocation));
+
         if (validNewPieceLocation(pieceLocation, newPieceLocation) && chessboard.isTherePieceHere(pieceLocation)) {
             PieceType movingPieceType = chessboard.getPiece(pieceLocation).getPieceType();
+            
             chessboard.movePiece(pieceLocation, newPieceLocation);
             chessboard.resetBoard();
             chessboard.showBoard();
         }
         else {
             std::cout << "that move was not possible" << std::endl;
+            restartMove = true;
+
         }
 
     };
 
     ChessBoard getchessboard() {
         return chessboard;
+    }
+    void setrestartMove(bool a) {
+        restartMove = a;
+    }
+    bool getrestartMove() {
+        return restartMove;
     }
     void newGame() {
 
@@ -1124,7 +1500,13 @@ public:
 
             }
             pieceMove((std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 - atoi(&playerinput[1]))), std::make_pair(chessNotationtranslatechar(playerinput[4]), 8 - atoi(&playerinput[5])));
-            currentTurn = nextTurn;
+            if (restartMove) {
+                setrestartMove(false);
+                continue;
+            }
+            else {
+                currentTurn = nextTurn;
+            }
         } while (gameRunning);
         //pieceMove(std::make_pair(chessNotationtranslatechar(playerinput[0]) - 1, atoi(&playerinput[1])), std::make_pair(chessNotationtranslatechar(playerinput[4]) - 1, atoi(&playerinput[5])));
         //by the way, pair input is basically like '1a' because rest of program is program with .first being x and .second being y
