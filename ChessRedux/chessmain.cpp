@@ -48,297 +48,39 @@ public:
         {
             pieceRepresentation = 'N';
             
-            /*
-            //add vertical Ls        
-            std::pair<int, int> upleftL;
-            upleftL.first = pieceLocation.first - 1;
-            upleftL.second = pieceLocation.second + 2;
-            validMoves.push_back(upleftL);
-            std::pair<int, int> uprightL;
-            uprightL.first = pieceLocation.first + 1;
-            uprightL.second = pieceLocation.second + 2;
-            validMoves.push_back(uprightL);
-            std::pair<int, int> downleftL;
-            downleftL.first = pieceLocation.first + 1;
-            downleftL.second = pieceLocation.second - 2;
-            validMoves.push_back(downleftL);
-            std::pair<int, int> downrightL;
-            downrightL.first = pieceLocation.first - 1;
-            downrightL.second = pieceLocation.second - 2;
-            validMoves.push_back(downrightL);
-            //add horizontal Ls
-            validMoves.push_back(std::make_pair(pieceLocation.first + 2, pieceLocation.second + 1));
-            validMoves.push_back(std::make_pair(pieceLocation.first + 2, pieceLocation.second - 1));
-            validMoves.push_back(std::make_pair(pieceLocation.first - 2, pieceLocation.second + 1));
-            validMoves.push_back(std::make_pair(pieceLocation.first - 2, pieceLocation.second - 1));
-            */
+            
             break;
         }
         case PieceType::BISHOP:
         {
 
             pieceRepresentation = 'B';
-            /*
-            std::pair<int, int> rightdiagonalMove = pieceLocation;
-            std::pair<int, int> leftdiagonalMove = pieceLocation;
-            int add = 0;
-            do {
-                //going up and right
-                if (rightdiagonalMove.first == 7) {
-                    break;
-                }
-                rightdiagonalMove.first = pieceLocation.first + add;
-                rightdiagonalMove.second = pieceLocation.second - add;
-                validMoves.push_back(rightdiagonalMove);
-                add++;
-
-            } while (rightdiagonalMove.second != 0);
-            //then
-            add = 0;
-            rightdiagonalMove = pieceLocation;
-            leftdiagonalMove = pieceLocation;
-            do {
-                //going down and left
-                if (rightdiagonalMove.first == 0) {
-                    break;
-                }
-                rightdiagonalMove.first = pieceLocation.first - add;
-                rightdiagonalMove.second = pieceLocation.second + add;
-                validMoves.push_back(rightdiagonalMove);
-                add++;
-            } while (rightdiagonalMove.second != 7);
-            add = 0;
-            rightdiagonalMove = pieceLocation;
-            leftdiagonalMove = pieceLocation;
-            do {
-                //going up and left
-                if (leftdiagonalMove.first == 0) {
-
-                    break;
-                }
-                leftdiagonalMove.first = pieceLocation.first - add;
-                leftdiagonalMove.second = pieceLocation.second - add;
-                validMoves.push_back(leftdiagonalMove);
-                add++;
-
-            } while (leftdiagonalMove.second != 0);
-            //then
-            add = 0;
-            rightdiagonalMove = pieceLocation;
-            leftdiagonalMove = pieceLocation;
-            do {
-                //going down and right
-                if (leftdiagonalMove.second == 7) {
-
-                    break;
-                }
-                leftdiagonalMove.first = pieceLocation.first - add;
-                leftdiagonalMove.second = pieceLocation.second + add;
-                validMoves.push_back(leftdiagonalMove);
-                add++;
-            } while (leftdiagonalMove.first != 7);
-
-
-
-            */
+            
             break;
         }
         case PieceType::QUEEN:
         {
             pieceRepresentation = 'Q';
-            /*
-            std::pair<int, int> horizontalMove = pieceLocation;
-            std::pair<int, int> verticalMove = pieceLocation;
-            std::pair<int, int> rightdiagonalMove = pieceLocation;
-            std::pair<int, int> leftdiagonalMove = pieceLocation;
-
-            int add = 0;
-            do {
-                //going right
-                horizontalMove.first = pieceLocation.first + add;
-                validMoves.push_back(horizontalMove);
-                add++;
-
-            } while (horizontalMove.first != 7);
-            add = 0;
-            horizontalMove = pieceLocation;
-            verticalMove = pieceLocation;
-            do {
-                //going left
-                horizontalMove.first = pieceLocation.first - add;
-                validMoves.push_back(horizontalMove);
-                add++;
-
-            } while (horizontalMove.first != 0);
-            add = 0;
-            horizontalMove = pieceLocation;
-            verticalMove = pieceLocation;
-            do {
-                //going up
-                verticalMove.second = pieceLocation.second - add;
-                validMoves.push_back(verticalMove);
-                add++;
-
-            } while (verticalMove.second != 0);
-            add = 0;
-            horizontalMove = pieceLocation;
-            verticalMove = pieceLocation;
-            do {
-                //going down
-                verticalMove.second = pieceLocation.second + add;
-                validMoves.push_back(verticalMove);
-                add++;
-
-            } while (verticalMove.second != 7);
-            add = 0;
-            rightdiagonalMove = pieceLocation;
-            leftdiagonalMove = pieceLocation;
-            do {
-                //going up and right
-                if (rightdiagonalMove.first == 7) {
-                    break;
-                }
-                rightdiagonalMove.first = pieceLocation.first + add;
-                rightdiagonalMove.second = pieceLocation.second - add;
-                validMoves.push_back(rightdiagonalMove);
-                add++;
-
-            } while (rightdiagonalMove.second != 0);
-            //then
-            add = 0;
-            rightdiagonalMove = pieceLocation;
-            leftdiagonalMove = pieceLocation;
-            do {
-                //going down and left
-                if (rightdiagonalMove.first == 0) {
-                    break;
-                }
-                rightdiagonalMove.first = pieceLocation.first - add;
-                rightdiagonalMove.second = pieceLocation.second + add;
-                validMoves.push_back(rightdiagonalMove);
-                add++;
-            } while (rightdiagonalMove.second != 7);
-            add = 0;
-            rightdiagonalMove = pieceLocation;
-            leftdiagonalMove = pieceLocation;
-            do {
-                //going up and left
-                if (leftdiagonalMove.first == 0) {
-
-                    break;
-                }
-                leftdiagonalMove.first = pieceLocation.first - add;
-                leftdiagonalMove.second = pieceLocation.second - add;
-                validMoves.push_back(leftdiagonalMove);
-                add++;
-
-            } while (leftdiagonalMove.second != 0);
-            //then
-            add = 0;
-            rightdiagonalMove = pieceLocation;
-            leftdiagonalMove = pieceLocation;
-            do {
-                //going down and right
-                if (leftdiagonalMove.second == 7) {
-
-                    break;
-                }
-                leftdiagonalMove.first = pieceLocation.first - add;
-                leftdiagonalMove.second = pieceLocation.second + add;
-                validMoves.push_back(leftdiagonalMove);
-                add++;
-            } while (leftdiagonalMove.first != 7);
-            */
+           
             break;
         }
         case PieceType::KING:
         {
             pieceRepresentation = 'K';
-            /*
-            validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
-            validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
-            validMoves.push_back(std::make_pair(pieceLocation.first + 1, pieceLocation.second));
-            validMoves.push_back(std::make_pair(pieceLocation.first - 1, pieceLocation.second));
-            validMoves.push_back(std::make_pair(pieceLocation.first + 1, pieceLocation.second + 1));
-            validMoves.push_back(std::make_pair(pieceLocation.first - 1, pieceLocation.second + 1));
-            validMoves.push_back(std::make_pair(pieceLocation.first - 1, pieceLocation.second - 1));
-            validMoves.push_back(std::make_pair(pieceLocation.first + 1, pieceLocation.second - 1));
-            */
+           
             break;
         }
 
         case PieceType::PAWN:
         {
             pieceRepresentation = 'P';
-            /*
-            if (colour == Colour::BLACK) {
-                if (firstMove) {
-                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
-                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 2));
-                    //going down
-                }
-                else {
-                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
-                }
-            }
-            else if (colour == Colour::WHITE) {
-                if (firstMove) {
-                    //going up
-                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
-                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 2));
-                }
-                else {
-                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
-                }
-            }
-            */
+            
             break;
         }
         case PieceType::ROOK:
         {
             pieceRepresentation = 'R';
-            /*
-            std::pair<int, int> horizontalMove = pieceLocation;
-            std::pair<int, int> verticalMove = pieceLocation;
-            int add;
-            add = 0;
-            do {
-                //going right
-                horizontalMove.first = pieceLocation.first + add;
-                validMoves.push_back(horizontalMove);
-                add++;
-
-            } while (horizontalMove.first != 7);
-            add = 0;
-            horizontalMove = pieceLocation;
-            verticalMove = pieceLocation;
-            do {
-                //going left
-                horizontalMove.first = pieceLocation.first - add;
-                validMoves.push_back(horizontalMove);
-                add++;
-
-            } while (horizontalMove.first != 0);
-            add = 0;
-            horizontalMove = pieceLocation;
-            verticalMove = pieceLocation;
-            do {
-                //going up
-                verticalMove.second = pieceLocation.second - add;
-                validMoves.push_back(verticalMove);
-                add++;
-
-            } while (verticalMove.second != 0);
-            add = 0;
-            horizontalMove = pieceLocation;
-            verticalMove = pieceLocation;
-            do {
-                //going down
-                verticalMove.second = pieceLocation.second + add;
-                validMoves.push_back(verticalMove);
-                add++;
-
-            } while (verticalMove.second != 7);*/
+            
             break;
             
         }
@@ -893,9 +635,63 @@ public:
     }
     void movePiece(std::pair<int, int> chessPieceLocation, std::pair<int, int> newLocation) {
         if (isTherePieceHere(newLocation) == 1) {
-            //take the piece
-            arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
-            //to program
+            if (arrayboard[chessPieceLocation.first][chessPieceLocation.second].getPieceType() != PieceType::PAWN){
+                if (arrayboard[chessPieceLocation.first][chessPieceLocation.second].getColour() != arrayboard[newLocation.first][newLocation.second].getColour()) {
+                    arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                    arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                    arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                    setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                    setPiece(arrayboard[newLocation.first][newLocation.second]);
+                    arrayboard[newLocation.first][newLocation.second].Moved();
+
+
+                }
+                else {
+                    std::cout << "check back at line 640 to see what went wrong" << std::endl;
+                }
+            }
+            else {
+                if (arrayboard[chessPieceLocation.first][chessPieceLocation.second].getColour() == Colour::WHITE) {
+                    if (chessPieceLocation.first + 1 == newLocation.first && chessPieceLocation.second - 1 == newLocation.second) {
+                        //if it is to the right of it
+                        arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                        arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                        arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                        setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                        setPiece(arrayboard[newLocation.first][newLocation.second]);
+                        arrayboard[newLocation.first][newLocation.second].Moved();
+                    }
+                    else if (chessPieceLocation.first - 1 == newLocation.first && chessPieceLocation.second - 1 == newLocation.second){
+                        //if it is to the left of it
+                        arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                        arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                        arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                        setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                        setPiece(arrayboard[newLocation.first][newLocation.second]);
+                        arrayboard[newLocation.first][newLocation.second].Moved();
+                    }
+                }
+                else {
+                    if (chessPieceLocation.first + 1 == newLocation.first && chessPieceLocation.second + 1 == newLocation.second) {
+                        //if it is to the right of it
+                        arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                        arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                        arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                        setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                        setPiece(arrayboard[newLocation.first][newLocation.second]);
+                        arrayboard[newLocation.first][newLocation.second].Moved();
+                    }
+                    else if (chessPieceLocation.first - 1 == newLocation.first && chessPieceLocation.second + 1 == newLocation.second) {
+                        //if it is to the left of it
+                        arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                        arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                        arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                        setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                        setPiece(arrayboard[newLocation.first][newLocation.second]);
+                        arrayboard[newLocation.first][newLocation.second].Moved();
+                    }
+                }
+            }
         }
         else {
             if (arrayboard[newLocation.first][newLocation.second].getPieceType() == PieceType::EMPTY) {
@@ -944,9 +740,13 @@ private:
                             return true; //there is space for it to move there
                         }
                         else {
-                            
-                            std::cout << "no space to move" << std::endl;
-                            return false;
+                            if (chessboard.isTherePieceHere(newPieceLocation)) {
+                                return true;
+                            }
+                            else {
+                                std::cout << "no space to move" << std::endl;
+                                return false;
+                            }
                         }
                     }
                     else {
@@ -1132,7 +932,7 @@ private:
                             else {
                                 move++;
                             }
-                        } while (std::make_pair(pieceLocation.first - move - 1, pieceLocation.second) != newPieceLocation);
+                        } while (std::make_pair(pieceLocation.first - move + 1, pieceLocation.second) != newPieceLocation);
                         return true;
                     }
                     else if (pieceLocation.second < newPieceLocation.second) {
@@ -1423,9 +1223,6 @@ private:
 
 public:
     void pieceMove(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
-
-        chessboard.reinstantiateValidMoves(chessboard.getPiece(pieceLocation));
-
         if (validNewPieceLocation(pieceLocation, newPieceLocation) && chessboard.isTherePieceHere(pieceLocation)) {
             PieceType movingPieceType = chessboard.getPiece(pieceLocation).getPieceType();
             
@@ -1458,9 +1255,6 @@ public:
         chessboard.showBoard();    
         //example of move: a1->a2
         std::string playerinput;
-        
-        //pieceMove((std::make_pair(atoi(&playerinput[1])-8, chessNotationtranslatechar(playerinput[0]))), std::make_pair(8-atoi(&playerinput[5]), chessNotationtranslatechar(playerinput[4])));
-        //pieceMove((std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 -atoi(&playerinput[1]))), std::make_pair(8-atoi(&playerinput[5]), chessNotationtranslatechar(playerinput[4])));
         do {
             do {
                 std::getline(std::cin, playerinput);
