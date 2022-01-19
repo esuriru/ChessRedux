@@ -346,7 +346,18 @@ public:
             for (int j = 0; j < 8; j++)
             {
                 //std::cout << "  " << arrayboard[j][i].getPieceRepresentation() << "  ";
-                std::cout << "  " << arrayboard[j][i].getPieceRepresentation() << "  ";
+                if (arrayboard[j][i].getPieceLocation().first == 0 && arrayboard[j][i].getPieceType() != PieceType::EMPTY) {
+                    std::cout << 8-i << " " << arrayboard[j][i].getPieceRepresentation() << "  ";
+                }
+                else
+                {
+                    if (j == 0) {
+                        std::cout << 8-i << " " << arrayboard[j][i].getPieceRepresentation() << "  ";
+                    }
+                    else {
+                        std::cout << "  " << arrayboard[j][i].getPieceRepresentation() << "  ";
+                    }
+                }
             }
             std::cout << "\n\n";
         }
@@ -357,6 +368,9 @@ public:
     }
     bool isTherePieceHere(std::pair<int, int> location) {
         switch (arrayboard[location.first][location.second].getPieceType()) {
+        case PieceType::EMPTY: {
+            return false;
+        }
 
         default:
             return true;
@@ -369,7 +383,7 @@ public:
         arrayboard[input.getPieceLocation().first][input.getPieceLocation().second] = input;
     }
     void movePiece(std::pair<int, int> chessPieceLocation, std::pair<int, int> newLocation) {
-        if (isTherePieceHere(newLocation) != 1) {
+        if (isTherePieceHere(newLocation) == 1) {
             //take the piece
             arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
             //to program
@@ -461,6 +475,9 @@ public:
 
 
             }*/
+        }
+        else {
+            std::cout << "that move was not possible" << std::endl;
         }
 
     };
