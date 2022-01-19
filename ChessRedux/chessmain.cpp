@@ -617,6 +617,7 @@ public:
                     arrayboard[newLocation.first][newLocation.second].Moved();
 
 
+
                 }
                 else {
                     std::cout << "check back at line 640 to see what went wrong" << std::endl;
@@ -701,6 +702,7 @@ private:
     bool restartMove = false;
     bool gameRunning = true;
     ChessBoard chessboard;
+    bool checkEvent = false;
     bool validNewPieceLocation(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
 
                 if (chessboard.getPiece(newPieceLocation).getPieceType() == PieceType::EMPTY) {
@@ -1117,9 +1119,14 @@ private:
                             if (!chessboard.getPiece(pieceLocation).getfirstMove()) {
                                 if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1)))
                                 {
-                                    //something is blocking the pawn
-                                    return false;
-
+                                    if (pieceLocation.second - 1 == newPieceLocation.second) {
+                                        //check if the movement is within bounds
+                                        return true;
+                                    }
+                                    else {
+                                        //something is blocking the pawn
+                                        return false;
+                                    }
                                 }
                                 else {
                                     return true;
@@ -1127,12 +1134,28 @@ private:
                             }
                             else if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1)))
                             {
-                                if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))) {
-                                    //something is blocking the pawn
-                                    return false;
+                                if (pieceLocation.second - 1 == newPieceLocation.second) {
+                                    //check if the movement is within bounds
+                                    return true;
+                                }
+                                else if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))) {
+                                    if (pieceLocation.second - 2 == newPieceLocation.second) {
+                                        //check if the movement is within bounds
+                                        return true;
+                                    }
+                                    else {
+                                        //something is blocking the pawn
+                                        return false;
+                                    }
                                 }
                                 else {
-                                    return true;
+                                    if (pieceLocation.second - 2 == newPieceLocation.second) {
+                                        //check if the movement is within bounds
+                                        return true;
+                                    }
+                                    else {
+                                        return false;
+                                    }
                                 }
 
                             }
@@ -1145,8 +1168,14 @@ private:
                             if (!chessboard.getPiece(pieceLocation).getfirstMove()) {
                                 if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1)))
                                 {
-                                    //something is blocking the pawn
-                                    return false;
+                                    if (pieceLocation.second + 1 == newPieceLocation.second) {
+                                        //check if the movement is within bounds
+                                        return true;
+                                    }
+                                    else {
+                                        //something is blocking the pawn
+                                        return false;
+                                    }
 
                                 }
                                 else {
@@ -1155,12 +1184,28 @@ private:
                             }
                             else if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1)))
                             {
-                                if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 2))) {
-                                    //something is blocking the pawn
-                                    return false;
+                                if (pieceLocation.second + 1 == newPieceLocation.second) {
+                                    //check if the movement is within bounds
+                                    return true;
+                                }
+                                else if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 2))) {
+                                    if (pieceLocation.second + 2 == newPieceLocation.second) {
+                                        //check if the movement is within bounds
+                                        return true;
+                                    }
+                                    else {
+                                        //something is blocking the pawn
+                                        return false;
+                                    }
                                 }
                                 else {
-                                    return true;
+                                    if (pieceLocation.second + 2 == newPieceLocation.second) {
+                                        //check if the movement is within bounds
+                                        return true;
+                                    }
+                                    else {
+                                        return false;
+                                    }
                                 }
 
                             }
@@ -1180,17 +1225,60 @@ private:
         
         
 
-    bool isMoveCheck(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {};
+    bool isMoveCheck(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
+        Colour ColourinQuestion = chessboard.getPiece(newPieceLocation).getColour();
+        std::pair<int, int> kingsLocation;
+        if (ColourinQuestion == Colour::WHITE) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (chessboard.getchesspiecearray()[j][i].getColour() == Colour::BLACK && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
+                        kingsLocation = chessboard.getchesspiecearray()[j][i].getPieceLocation();
+                    }
+                }
+
+            }
+            if (!checkforSpace(newPieceLocation, kingsLocation)) {
+                //look for the black king, if the king is blocking the path,
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (chessboard.getchesspiecearray()[j][i].getColour() == Colour::WHITE && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
+                        kingsLocation = chessboard.getchesspiecearray()[j][i].getPieceLocation();
+                        break;
+                    }
+                }
+
+            }
+            if (!checkforSpace(newPieceLocation, kingsLocation)) {
+                //look for the white king, if the king is blocking the path,
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
     bool isMoveCheckMate(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {};
 
 public:
     void pieceMove(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
         if (validNewPieceLocation(pieceLocation, newPieceLocation) && chessboard.isTherePieceHere(pieceLocation)) {
             PieceType movingPieceType = chessboard.getPiece(pieceLocation).getPieceType();
-            
             chessboard.movePiece(pieceLocation, newPieceLocation);
             chessboard.resetBoard();
             chessboard.showBoard();
+            if (isMoveCheck(pieceLocation, newPieceLocation)) {
+                checkEvent = true;
+                std::cout << "in check";
+            }
         }
         else {
             std::cout << "that move was not possible" << std::endl;
