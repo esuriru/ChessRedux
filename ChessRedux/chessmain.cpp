@@ -7,7 +7,6 @@
 
 enum class PieceType { PAWN, BISHOP, KNIGHT, ROOK, QUEEN, KING, EMPTY };
 enum class Colour { BLACK, WHITE };
-// enum class Direction { N, NE, E, SE, S, SW, W, NW, N };
 
 class ChessPiece {
 private:
@@ -150,7 +149,6 @@ public:
 
 class ChessBoard {
 private:
-    //std::vector<std::vector<ChessPiece>> board;
     ChessPiece arrayboard[8][8];
     
 
@@ -402,32 +400,6 @@ public:
                 add++;
             } while (leftdiagonalMove.first != 7);
 
-
-
-            /*for (int i = 1; rightdiagonalMove.first < 7; i++)
-            {
-                rightdiagonalMove.first = pieceLocation.first + i;
-                rightdiagonalMove.second = pieceLocation.second - i;
-                newvalidMoves.push_back(rightdiagonalMove);
-            }
-            for (int i = 1; rightdiagonalMove.second < 7; i++)
-            {
-                rightdiagonalMove.first = pieceLocation.first + i;
-                rightdiagonalMove.second = pieceLocation.second + i;
-                newvalidMoves.push_back(rightdiagonalMove);
-            }
-            for (int i = 1; leftdiagonalMove.first < 0; i++)
-            {
-                leftdiagonalMove.first = pieceLocation.first - i;
-                leftdiagonalMove.second = pieceLocation.second - i;
-                newvalidMoves.push_back(leftdiagonalMove);
-            }
-            for (int i = 1; leftdiagonalMove.second < 7; i++)
-            {
-                leftdiagonalMove.first = pieceLocation.first - i;
-                leftdiagonalMove.second = pieceLocation.second + i;
-                newvalidMoves.push_back(leftdiagonalMove);
-            }*/
             break;
         }
         case PieceType::QUEEN:
@@ -730,10 +702,7 @@ private:
     bool gameRunning = true;
     ChessBoard chessboard;
     bool validNewPieceLocation(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
-        //for (int i = 0; i < chessboard.getPiece(pieceLocation).getValidMoves().size(); i++)
-        //{
 
-            //if (newPieceLocation == chessboard.getPiece(pieceLocation).getValidMoves()[i]) {
                 if (chessboard.getPiece(newPieceLocation).getPieceType() == PieceType::EMPTY) {
                     if (chessboard.getPiece(pieceLocation).getPieceType() != PieceType::KNIGHT) {
                         if (checkforSpace(pieceLocation, newPieceLocation)) {
@@ -761,15 +730,8 @@ private:
                 else {
                     std::cout << "error has occured, piece is not able to be moved";
                     return false;
-                    //break;
+                    
                 }
-
-                //if the movement is from one colour to another, and that chess piece location is in that type's valid moves, then return true
-            //}
-            //else {
-            //    continue;
-            //}
-        //}
         return false;
     }
 
@@ -1285,7 +1247,7 @@ public:
                 currentTurn = nextTurn;
             }
         } while (gameRunning);
-        //pieceMove(std::make_pair(chessNotationtranslatechar(playerinput[0]) - 1, atoi(&playerinput[1])), std::make_pair(chessNotationtranslatechar(playerinput[4]) - 1, atoi(&playerinput[5])));
+        
         //by the way, pair input is basically like '1a' because rest of program is program with .first being x and .second being y
         //test knight by b8->c6, keeping these comments here in case some conversion goes awry
 
