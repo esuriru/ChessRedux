@@ -991,7 +991,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first + move - 1, pieceLocation.second + move + 1) != newPieceLocation);
                     return true;
                 }
                 else {
@@ -1005,7 +1005,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first + move - 1, pieceLocation.second - move + 1) != newPieceLocation);
                     return true;
                 }
 
@@ -1023,7 +1023,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first - move + 1, pieceLocation.second + move - 1) != newPieceLocation);
                     return true;
 
                 }
@@ -1038,7 +1038,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first - move + 1, pieceLocation.second - move + 1) != newPieceLocation);
                     return true;
                 }
             }
@@ -1057,7 +1057,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first, pieceLocation.second + move - 1) != newPieceLocation);
                     return true;
                 }
                 else {
@@ -1071,7 +1071,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first, pieceLocation.second - move + 1) != newPieceLocation);
                     return true;
                 }
             }
@@ -1087,7 +1087,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first + move - 1, pieceLocation.second) != newPieceLocation);
                     return true;
                 }
                 else if (pieceLocation.second < newPieceLocation.second) {
@@ -1101,7 +1101,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first + move - 1, pieceLocation.second + move - 1) != newPieceLocation);
                     return true;
                 }
                 else {
@@ -1115,7 +1115,7 @@ private:
                         else {
                             move++;
                         }
-                    } while (pieceLocation != newPieceLocation);
+                    } while (std::make_pair(pieceLocation.first + move - 1, pieceLocation.second - move + 1) != newPieceLocation);
                     return true;
                 }
 
@@ -1132,7 +1132,7 @@ private:
                             else {
                                 move++;
                             }
-                        } while (pieceLocation != newPieceLocation);
+                        } while (std::make_pair(pieceLocation.first - move - 1, pieceLocation.second) != newPieceLocation);
                         return true;
                     }
                     else if (pieceLocation.second < newPieceLocation.second) {
@@ -1146,7 +1146,7 @@ private:
                             else {
                                 move++;
                             }
-                        } while (pieceLocation != newPieceLocation);
+                        } while (std::make_pair(pieceLocation.first - move, pieceLocation.second + move) != newPieceLocation);
                         return true;
 
                     }
@@ -1161,7 +1161,7 @@ private:
                             else {
                                 move++;
                             }
-                        } while (pieceLocation != newPieceLocation);
+                        } while (std::make_pair(pieceLocation.first - move, pieceLocation.second - move) != newPieceLocation);
                         return true;
                     }
                 }
@@ -1179,7 +1179,7 @@ private:
                                 else {
                                     move++;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first, pieceLocation.second + move - 1) != newPieceLocation);
                             return true;
                         }
                         else {
@@ -1193,7 +1193,7 @@ private:
                                 else {
                                     move++;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first, pieceLocation.second - move + 1) != newPieceLocation);
                             return true;
                         }
                     }
@@ -1209,7 +1209,7 @@ private:
                                 else {
                                     move++;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first + move - 1, pieceLocation.second) != newPieceLocation);
                             return true;
                         }
                     }
@@ -1224,7 +1224,7 @@ private:
                                 else {
                                     move++;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first - move + 1, pieceLocation.second) != newPieceLocation);
                             return true;
                         }
                     }
@@ -1232,27 +1232,7 @@ private:
                 }
                 case PieceType::KING: {
                     move = 1;
-                    /*
-                    if(pieceLocation.first < newPieceLocation.first){
-                        do {
-                            //moving left
-                            //check if it is at the most left 
-                            if (pieceLocation.first - move < 0) {
-                                std::cout << "this should not happen, check the code" << std::endl;
-                                return false;
-                            }
-                            else {
-                                if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first - move, pieceLocation.second))) {
-                                    //there is a piece in the way, return false
-                                    return false;
-                                }
-                                else {
-                                    //there is nothing in the way
-                                    return true;
-                                }
-                            }
-                        } while (pieceLocation != newPieceLocation);
-                        */
+
                     if (pieceLocation.first == newPieceLocation.first) {
                         if (pieceLocation.second < newPieceLocation.second) {
                             //travelling downwards
@@ -1265,7 +1245,7 @@ private:
                                 else {
                                     return true;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first, pieceLocation.second + move) != newPieceLocation);
 
                         }
                         else {
@@ -1279,7 +1259,7 @@ private:
                                 else {
                                     return true;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first, pieceLocation.second - move) != newPieceLocation);
 
                         }
                     }
@@ -1295,7 +1275,7 @@ private:
                                 else {
                                     return true;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first + move, pieceLocation.second) != newPieceLocation);
                             
                         }
                         else if (pieceLocation.second < newPieceLocation.second) {
@@ -1309,7 +1289,7 @@ private:
                                 else {
                                     return true;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first + move, pieceLocation.second + move) != newPieceLocation);
                         }
                         else {
                             //travelling right upwards
@@ -1322,7 +1302,7 @@ private:
                                 else {
                                     return true;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first + move, pieceLocation.second - move) != newPieceLocation);
                         }
 
                     }
@@ -1338,7 +1318,7 @@ private:
                                 else {
                                     return true;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first - move, pieceLocation.second) != newPieceLocation);
                         }
                         else if (pieceLocation.second < newPieceLocation.second) {
                             //travelling left downwards
@@ -1351,7 +1331,7 @@ private:
                                 else {
                                     return true;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first - move, pieceLocation.second + move) != newPieceLocation);
 
                         }
                         else {
@@ -1365,7 +1345,7 @@ private:
                                 else {
                                     return true;
                                 }
-                            } while (pieceLocation != newPieceLocation);
+                            } while (std::make_pair(pieceLocation.first - move, pieceLocation.second - move) != newPieceLocation);
 
                         }
                     }
@@ -1406,6 +1386,9 @@ private:
                                     //something is blocking the pawn
                                     return false;
 
+                                }
+                                else {
+                                    return true;
                                 }
                             }
                             else if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1)))
