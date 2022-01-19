@@ -54,7 +54,7 @@ public:
             uprightL.second = pieceLocation.second + 2;
             validMoves.push_back(uprightL);
             std::pair<int, int> downleftL;
-            downleftL.first = pieceLocation.first - 1;
+            downleftL.first = pieceLocation.first + 1;
             downleftL.second = pieceLocation.second - 2;
             validMoves.push_back(downleftL);
             std::pair<int, int> downrightL;
@@ -207,12 +207,12 @@ public:
             std::cout << "ERROR";
         }
         //cleanup
-        for (int i = 0; i < validMoves.size(); i++)
+        /*for (int i = 0; i < validMoves.size(); i++)
         {
             if (validMoves[i].first < 0 || validMoves[i].first > 7 || validMoves[i].second < 0 || validMoves[i].second > 7) {
                 validMoves.erase(validMoves.begin() + i);
             }
-        }
+        }*/
     }
     std::vector<std::pair<int, int>> getValidMoves() {
         return validMoves;
@@ -256,71 +256,71 @@ public:
         //empty spaces
 
         //white team
-        ChessPiece whiteRook1 = ChessPiece(PieceType::ROOK, Colour::WHITE, std::make_pair(0, 0));
-        setPiece(whiteRook1);
-        ChessPiece whiteRook2 = ChessPiece(PieceType::ROOK, Colour::WHITE, std::make_pair(7, 0));
-        setPiece(whiteRook2);
-        ChessPiece whiteKnight1 = ChessPiece(PieceType::KNIGHT, Colour::WHITE, std::make_pair(1, 0));
-        setPiece(whiteKnight1);
-        ChessPiece whiteKnight2 = ChessPiece(PieceType::KNIGHT, Colour::WHITE, std::make_pair(6, 0));
-        setPiece(whiteKnight2);
-        ChessPiece whiteBishop1 = ChessPiece(PieceType::BISHOP, Colour::WHITE, std::make_pair(2, 0));
-        setPiece(whiteBishop1);
-        ChessPiece whiteBishop2 = ChessPiece(PieceType::BISHOP, Colour::WHITE, std::make_pair(5, 0));
-        setPiece(whiteBishop2);
-        ChessPiece whiteKing1 = ChessPiece(PieceType::KING, Colour::WHITE, std::make_pair(4, 0));
-        setPiece(whiteKing1);
-        ChessPiece whiteQueen1 = ChessPiece(PieceType::QUEEN, Colour::WHITE, std::make_pair(3, 0));
-        setPiece(whiteQueen1);
-        ChessPiece whitePawn1 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(0, 1));
-        setPiece(whitePawn1);
-        ChessPiece whitePawn2 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(1, 1));
-        setPiece(whitePawn2);
-        ChessPiece whitePawn3 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(2, 1));
-        setPiece(whitePawn3);
-        ChessPiece whitePawn4 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(3, 1));
-        setPiece(whitePawn4);
-        ChessPiece whitePawn5 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(4, 1));
-        setPiece(whitePawn5);
-        ChessPiece whitePawn6 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(5, 1));
-        setPiece(whitePawn6);
-        ChessPiece whitePawn7 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(6, 1));
-        setPiece(whitePawn7);
-        ChessPiece whitePawn8 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(7, 1));
-        setPiece(whitePawn8);
-        //black pieces
-        ChessPiece blackRook1 = ChessPiece(PieceType::ROOK, Colour::BLACK, std::make_pair(0, 7));
+        ChessPiece blackRook1 = ChessPiece(PieceType::ROOK, Colour::BLACK, std::make_pair(0, 0));
         setPiece(blackRook1);
-        ChessPiece blackRook2 = ChessPiece(PieceType::ROOK, Colour::BLACK, std::make_pair(7, 7));
+        ChessPiece blackRook2 = ChessPiece(PieceType::ROOK, Colour::BLACK, std::make_pair(7, 0));
         setPiece(blackRook2);
-        ChessPiece blackKnight1 = ChessPiece(PieceType::KNIGHT, Colour::BLACK, std::make_pair(1, 7));
+        ChessPiece blackKnight1 = ChessPiece(PieceType::KNIGHT, Colour::BLACK, std::make_pair(1, 0));
         setPiece(blackKnight1);
-        ChessPiece blackKnight2 = ChessPiece(PieceType::KNIGHT, Colour::BLACK, std::make_pair(6, 7));
+        ChessPiece blackKnight2 = ChessPiece(PieceType::KNIGHT, Colour::BLACK, std::make_pair(6, 0));
         setPiece(blackKnight2);
-        ChessPiece blackBishop1 = ChessPiece(PieceType::BISHOP, Colour::BLACK, std::make_pair(2, 7));
+        ChessPiece blackBishop1 = ChessPiece(PieceType::BISHOP, Colour::BLACK, std::make_pair(2, 0));
         setPiece(blackBishop1);
-        ChessPiece blackBishop2 = ChessPiece(PieceType::BISHOP, Colour::BLACK, std::make_pair(5, 7));
+        ChessPiece blackBishop2 = ChessPiece(PieceType::BISHOP, Colour::BLACK, std::make_pair(5, 0));
         setPiece(blackBishop2);
-        ChessPiece blackKing1 = ChessPiece(PieceType::KING, Colour::BLACK, std::make_pair(4, 7));
+        ChessPiece blackKing1 = ChessPiece(PieceType::KING, Colour::BLACK, std::make_pair(4, 0));
         setPiece(blackKing1);
-        ChessPiece blackQueen1 = ChessPiece(PieceType::QUEEN, Colour::BLACK, std::make_pair(3, 7));
+        ChessPiece blackQueen1 = ChessPiece(PieceType::QUEEN, Colour::BLACK, std::make_pair(3, 0));
         setPiece(blackQueen1);
-        ChessPiece blackPawn1 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(0, 6));
+        ChessPiece blackPawn1 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(0, 1));
         setPiece(blackPawn1);
-        ChessPiece blackPawn2 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(1, 6));
+        ChessPiece blackPawn2 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(1, 1));
         setPiece(blackPawn2);
-        ChessPiece blackPawn3 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(2, 6));
+        ChessPiece blackPawn3 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(2, 1));
         setPiece(blackPawn3);
-        ChessPiece blackPawn4 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(3, 6));
+        ChessPiece blackPawn4 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(3, 1));
         setPiece(blackPawn4);
-        ChessPiece blackPawn5 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(4, 6));
+        ChessPiece blackPawn5 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(4, 1));
         setPiece(blackPawn5);
-        ChessPiece blackPawn6 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(5, 6));
+        ChessPiece blackPawn6 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(5, 1));
         setPiece(blackPawn6);
-        ChessPiece blackPawn7 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(6, 6));
+        ChessPiece blackPawn7 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(6, 1));
         setPiece(blackPawn7);
-        ChessPiece blackPawn8 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(7, 6));
+        ChessPiece blackPawn8 = ChessPiece(PieceType::PAWN, Colour::BLACK, std::make_pair(7, 1));
         setPiece(blackPawn8);
+        //black pieces
+        ChessPiece whiteRook1 = ChessPiece(PieceType::ROOK, Colour::WHITE, std::make_pair(0, 7));
+        setPiece(whiteRook1);
+        ChessPiece whiteRook2 = ChessPiece(PieceType::ROOK, Colour::WHITE, std::make_pair(7, 7));
+        setPiece(whiteRook2);
+        ChessPiece whiteKnight1 = ChessPiece(PieceType::KNIGHT, Colour::WHITE, std::make_pair(1, 7));
+        setPiece(whiteKnight1);
+        ChessPiece whiteKnight2 = ChessPiece(PieceType::KNIGHT, Colour::WHITE, std::make_pair(6, 7));
+        setPiece(whiteKnight2);
+        ChessPiece whiteBishop1 = ChessPiece(PieceType::BISHOP, Colour::WHITE, std::make_pair(2, 7));
+        setPiece(whiteBishop1);
+        ChessPiece whiteBishop2 = ChessPiece(PieceType::BISHOP, Colour::WHITE, std::make_pair(5, 7));
+        setPiece(whiteBishop2);
+        ChessPiece whiteKing1 = ChessPiece(PieceType::KING, Colour::WHITE, std::make_pair(4, 7));
+        setPiece(whiteKing1);
+        ChessPiece whiteQueen1 = ChessPiece(PieceType::QUEEN, Colour::WHITE, std::make_pair(3, 7));
+        setPiece(whiteQueen1);
+        ChessPiece whitePawn1 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(0, 6));
+        setPiece(whitePawn1);
+        ChessPiece whitePawn2 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(1, 6));
+        setPiece(whitePawn2);
+        ChessPiece whitePawn3 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(2, 6));
+        setPiece(whitePawn3);
+        ChessPiece whitePawn4 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(3, 6));
+        setPiece(whitePawn4);
+        ChessPiece whitePawn5 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(4, 6));
+        setPiece(whitePawn5);
+        ChessPiece whitePawn6 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(5, 6));
+        setPiece(whitePawn6);
+        ChessPiece whitePawn7 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(6, 6));
+        setPiece(whitePawn7);
+        ChessPiece whitePawn8 = ChessPiece(PieceType::PAWN, Colour::WHITE, std::make_pair(7, 6));
+        setPiece(whitePawn8);
         
     }
     void showBoard() {
@@ -359,34 +359,33 @@ public:
             //to program
         }
         else {
-            if (arrayboard[chessPieceLocation.first][chessPieceLocation.second].getColour() == arrayboard[newLocation.first][newLocation.second].getColour()) {
+            if (arrayboard[newLocation.first][newLocation.second].getPieceType() == PieceType::EMPTY) {
+
+                auto storebeforechange = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                arrayboard[chessPieceLocation.first][chessPieceLocation.second] = arrayboard[newLocation.first][newLocation.second];
+                arrayboard[newLocation.first][newLocation.second] = storebeforechange;
+
+                /*
+                arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
+                arrayboard[newLocation.first][newLocation.second].setPieceLocation(storebeforechange.getPieceLocation());
+                */
+                arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(storebeforechange.getPieceLocation());
+                arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+
+
+                setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                setPiece(arrayboard[newLocation.first][newLocation.second]);
+            } else if (arrayboard[chessPieceLocation.first][chessPieceLocation.second].getColour() == arrayboard[newLocation.first][newLocation.second].getColour())
+            {
                 std::cout << "not possible"; //.. is trying to take their own team
             }
             else {
-                if (arrayboard[newLocation.first][newLocation.second].getPieceType() == PieceType::EMPTY) {
-                    
-                    auto storebeforechange = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
-                    arrayboard[chessPieceLocation.first][chessPieceLocation.second] = arrayboard[newLocation.first][newLocation.second];
-                    arrayboard[newLocation.first][newLocation.second] = storebeforechange;
-
-                    /*
-                    arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
-                    arrayboard[newLocation.first][newLocation.second].setPieceLocation(storebeforechange.getPieceLocation());
-                    */
-                    arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(storebeforechange.getPieceLocation());
-                    arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
-                    
-
-                    setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
-                    setPiece(arrayboard[newLocation.first][newLocation.second]);
-                }
-                else {
                     std::cout << "error";
                 }
 
             }
         }
-    }
+    
     auto getchesspiecearray(){
         return arrayboard;
     }
@@ -394,6 +393,8 @@ public:
 
 class ChessGame {
 private:
+    Colour currentTurn = Colour::WHITE;
+    bool gameRunning = true;
     ChessBoard chessboard;
     bool validNewPieceLocation(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
         for (int i = 0; i < chessboard.getPiece(pieceLocation).getValidMoves().size(); i++)
@@ -458,14 +459,34 @@ public:
             std::cout << "\n" << chessboard.getBoard()[0][0].getValidMoves()[i].first << "," << chessboard.getBoard()[0][0].getValidMoves()[i].second;
         }
         */
-        chessboard.showBoard();
-        
-        std::string playerinput;
-        std::getline(std::cin, playerinput);
+        Colour nextTurn;
+        std::string colourinTurn = "white";
+        currentTurn = Colour::WHITE;
+        chessboard.showBoard();    
         //example of move: a1->a2
-
+        std::string playerinput;
+        
         //pieceMove((std::make_pair(atoi(&playerinput[1])-8, chessNotationtranslatechar(playerinput[0]))), std::make_pair(8-atoi(&playerinput[5]), chessNotationtranslatechar(playerinput[4])));
-        pieceMove((std::make_pair(chessNotationtranslatechar(playerinput[0]), atoi(&playerinput[1]) - 8)), std::make_pair(8-atoi(&playerinput[5]), chessNotationtranslatechar(playerinput[4])));
+        //pieceMove((std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 -atoi(&playerinput[1]))), std::make_pair(8-atoi(&playerinput[5]), chessNotationtranslatechar(playerinput[4])));
+        do {
+            do {
+                std::getline(std::cin, playerinput);
+                if (chessboard.getPiece(std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 - atoi(&playerinput[1]))).getColour() != currentTurn) {
+                    std::cout << "It is "<< colourinTurn << "'s turn" << std::endl;
+                }
+            } while (chessboard.getPiece(std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 - atoi(&playerinput[1]))).getColour() != currentTurn);
+            if (currentTurn == Colour::WHITE) {
+                nextTurn = Colour::BLACK;
+                colourinTurn = "black";
+            }
+            else {
+                nextTurn = Colour::WHITE;
+                colourinTurn = "white";
+
+            }
+            pieceMove((std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 - atoi(&playerinput[1]))), std::make_pair(chessNotationtranslatechar(playerinput[4]), 8 - atoi(&playerinput[5])));
+            currentTurn = nextTurn;
+        } while (gameRunning);
         //pieceMove(std::make_pair(chessNotationtranslatechar(playerinput[0]) - 1, atoi(&playerinput[1])), std::make_pair(chessNotationtranslatechar(playerinput[4]) - 1, atoi(&playerinput[5])));
         //by the way, pair input is basically like '1a' because rest of program is program with .first being x and .second being y
         //test knight by b8->c6, keeping these comments here in case some conversion goes awry
@@ -474,7 +495,6 @@ public:
     }
     int chessNotationtranslatechar(char a) {
         return int(a) - 97;
-
     }
 };
 
