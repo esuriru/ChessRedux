@@ -827,6 +827,7 @@ private:
                 }
             }
             break;
+        }
         case PieceType::QUEEN:
         {
             if (pieceLocation.first == newPieceLocation.first) {
@@ -950,6 +951,7 @@ private:
                 }
             }
             break;
+        }
         case PieceType::ROOK: {
             if (pieceLocation.first == newPieceLocation.first) {
                 if (pieceLocation.second < newPieceLocation.second) {
@@ -1134,6 +1136,7 @@ private:
                 }
             }
             break;
+        }
         case PieceType::PAWN: {
             if (pieceLocation.first == newPieceLocation.first) {
                 if (chessboard.getPiece(pieceLocation).getColour() == Colour::WHITE) {
@@ -1177,41 +1180,44 @@ private:
                     }
 
 
-                }
-                else if (pieceLocation.second - 1 == newPieceLocation.second)
-                {
-                    //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))
-                    if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))) {
-                        //check if the coast is clear
-                        return true;
+
+                    else if (pieceLocation.second - 1 == newPieceLocation.second)
+                    {
+                        //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))
+                        if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))) {
+                            //check if the coast is clear
+                            return true;
+                        }
+                        else {
+                            //something is blocking the pawn
+                            return false;
+                        }
                     }
+
+
                     else {
-                        //something is blocking the pawn
                         return false;
                     }
                 }
 
                 else {
-                    return false;
-                }
-            }
-            else {
-                if (chessboard.getPiece(pieceLocation).getfirstMove()) {
-                    //if it is the first move,
-                /*
+                    if (chessboard.getPiece(pieceLocation).getfirstMove()) {
+                        //if it is the first move,
+                    /*
 
-                */
-                    if (pieceLocation.second + 1 == newPieceLocation.second)
-                    {
-                        //pieceLocation.second - 1 == newPieceLocation.second
-                        if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1))) {
-                            //check if there's nothing there
-                            return true;
+                    */
+                        if (pieceLocation.second + 1 == newPieceLocation.second)
+                        {
+                            //pieceLocation.second - 1 == newPieceLocation.second
+                            if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1))) {
+                                //check if there's nothing there
+                                return true;
+                            }
                         }
                         else if (pieceLocation.second + 2 == newPieceLocation.second) {
                             //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))
                             //
-                            if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 2))) {
+                            if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 2))) {
                                 //check if there's something there
                                 return true;
                             }
@@ -1231,30 +1237,32 @@ private:
                         }
                     }
 
-                }
-                else if (pieceLocation.second + 1 == newPieceLocation.second)
-                {
-                    //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))
-                    if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1))) {
-                        //check if the coast is clear
-                        return true;
+
+
+                    else if (pieceLocation.second + 1 == newPieceLocation.second)
+                    {
+                        //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))
+                        if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1))) {
+                            //check if the coast is clear
+                            return true;
+                        }
+                        else {
+                            //something is blocking the pawn
+                            return false;
+                        }
                     }
                     else {
-                        //something is blocking the pawn
                         return false;
                     }
                 }
-                else {
-                    return false;
-                }
+
             }
         }
+
+
+
         }
-        }
-        }
-        }
-        }
-        
+    }
         
         
         
