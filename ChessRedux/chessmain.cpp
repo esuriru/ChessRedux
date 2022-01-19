@@ -159,12 +159,25 @@ public:
         case PieceType::PAWN:
         {
             pieceRepresentation = 'P';
-            if (firstMove) {
-                validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
-                validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 2));
+            if (colour == Colour::BLACK) {
+                if (firstMove) {
+                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
+                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 2));
+                    //going down
+                }
+                else {
+                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
+                }
             }
-            else {
-                validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second + 1));
+            else if (colour == Colour::WHITE) {
+                if (firstMove) {
+                    //going up
+                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
+                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 2));
+                }
+                else {
+                    validMoves.push_back(std::make_pair(pieceLocation.first, pieceLocation.second - 1));
+                }
             }
             break;
         }
@@ -240,6 +253,9 @@ public:
     }
     void setPieceRepresentation(char a) {
         pieceRepresentation = a;
+    }
+    void Moved() {
+        firstMove = false;
     }
 };
 
@@ -375,6 +391,8 @@ public:
 
                 setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
                 setPiece(arrayboard[newLocation.first][newLocation.second]);
+                arrayboard[newLocation.first][newLocation.second].Moved();
+
             } else if (arrayboard[chessPieceLocation.first][chessPieceLocation.second].getColour() == arrayboard[newLocation.first][newLocation.second].getColour())
             {
                 std::cout << "not possible"; //.. is trying to take their own team
@@ -471,6 +489,10 @@ public:
         do {
             do {
                 std::getline(std::cin, playerinput);
+                if (playerinput[2] != '-') {
+                    std::cout << "invalid input" << std::endl;
+                    continue;
+                }
                 if (chessboard.getPiece(std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 - atoi(&playerinput[1]))).getColour() != currentTurn) {
                     std::cout << "It is "<< colourinTurn << "'s turn" << std::endl;
                 }
