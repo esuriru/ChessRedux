@@ -636,42 +636,52 @@ public:
             else {
                 if (arrayboard[chessPieceLocation.first][chessPieceLocation.second].getColour() == Colour::WHITE) {
                     if (chessPieceLocation.first + 1 == newLocation.first && chessPieceLocation.second - 1 == newLocation.second) {
-                        //if it is to the right of it
-                        arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
-                        arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
-                        arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
-                        setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
-                        setPiece(arrayboard[newLocation.first][newLocation.second]);
-                        arrayboard[newLocation.first][newLocation.second].Moved();
+                        if (getPiece(newLocation).getPieceType() != PieceType::EMPTY) {
+
+
+                            //if it is to the right of it
+                            arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                            arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                            arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                            setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                            setPiece(arrayboard[newLocation.first][newLocation.second]);
+                            arrayboard[newLocation.first][newLocation.second].Moved();
+                        }
                     }
                     else if (chessPieceLocation.first - 1 == newLocation.first && chessPieceLocation.second - 1 == newLocation.second){
                         //if it is to the left of it
-                        arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
-                        arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
-                        arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
-                        setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
-                        setPiece(arrayboard[newLocation.first][newLocation.second]);
-                        arrayboard[newLocation.first][newLocation.second].Moved();
+                        if (getPiece(newLocation).getPieceType() != PieceType::EMPTY) {
+                            arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                            arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                            arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                            setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                            setPiece(arrayboard[newLocation.first][newLocation.second]);
+                            arrayboard[newLocation.first][newLocation.second].Moved();
+                        }
                     }
                 }
                 else {
                     if (chessPieceLocation.first + 1 == newLocation.first && chessPieceLocation.second + 1 == newLocation.second) {
                         //if it is to the right of it
-                        arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
-                        arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
-                        arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
-                        setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
-                        setPiece(arrayboard[newLocation.first][newLocation.second]);
-                        arrayboard[newLocation.first][newLocation.second].Moved();
+                        if (getPiece(newLocation).getPieceType() != PieceType::EMPTY) {
+                            arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                            arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                            arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                            setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                            setPiece(arrayboard[newLocation.first][newLocation.second]);
+                            arrayboard[newLocation.first][newLocation.second].Moved();
+                        }
                     }
                     else if (chessPieceLocation.first - 1 == newLocation.first && chessPieceLocation.second + 1 == newLocation.second) {
                         //if it is to the left of it
-                        arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
-                        arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
-                        arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
-                        setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
-                        setPiece(arrayboard[newLocation.first][newLocation.second]);
-                        arrayboard[newLocation.first][newLocation.second].Moved();
+                        if (getPiece(newLocation).getPieceType() != PieceType::EMPTY) {
+                            arrayboard[newLocation.first][newLocation.second] = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
+                            arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
+                            arrayboard[chessPieceLocation.first][chessPieceLocation.second] = ChessPiece(chessPieceLocation);
+                            setPiece(arrayboard[chessPieceLocation.first][chessPieceLocation.second]);
+                            setPiece(arrayboard[newLocation.first][newLocation.second]);
+                            arrayboard[newLocation.first][newLocation.second].Moved();
+                        }
                     }
                 }
             }
@@ -1125,41 +1135,47 @@ private:
             }
             break;
         case PieceType::PAWN: {
-            if (chessboard.getPiece(pieceLocation).getColour() == Colour::WHITE) {
-                if (chessboard.getPiece(pieceLocation).getfirstMove()) {
-                    //if it is the first move,
-                    /*
+            if (pieceLocation.first == newPieceLocation.first) {
+                if (chessboard.getPiece(pieceLocation).getColour() == Colour::WHITE) {
+                    if (chessboard.getPiece(pieceLocation).getfirstMove()) {
+                        //if it is the first move,
+                        /*
 
-                    */
-                    if (pieceLocation.second - 1 == newPieceLocation.second)
-                    {
-                        //pieceLocation.second - 1 == newPieceLocation.second
-                        if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))) {
-                            //check if there's nothing there
-                            return true;
+                        */
+
+                        if (pieceLocation.second - 1 == newPieceLocation.second)
+                        {
+                            //pieceLocation.second - 1 == newPieceLocation.second
+                            if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))) {
+                                //check if there's nothing there
+                                return true;
+                            }
+                            else if (pieceLocation.second - 2 == newPieceLocation.second) {
+                                //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))
+                                //
+                                if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))) {
+                                    //check if there's something there
+                                    return true;
+                                }
+                                else {
+                                    //something is blocking the pawn
+                                    return false;
+                                }
+                            }
                         }
                         else if (pieceLocation.second - 2 == newPieceLocation.second) {
-                            //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))
-                            //
-                            if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))) {
-                                //check if there's something there
+                            //check if the movement is within bounds
+                            if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))) {
+                                //check if there's nothing there
                                 return true;
                             }
-                            else {
-                                //something is blocking the pawn
-                                return false;
-                            }
-                        }
-                        else {
-                            if (pieceLocation.second - 2 == newPieceLocation.second) {
-                                //check if the movement is within bounds
-                                return true;
-                            }
+
                             else {
                                 return false;
                             }
                         }
                     }
+
 
                 }
                 else if (pieceLocation.second - 1 == newPieceLocation.second)
@@ -1174,71 +1190,77 @@ private:
                         return false;
                     }
                 }
-            
-            else {
-                return false;
-            }
-        }
+
                 else {
-                    if (chessboard.getPiece(pieceLocation).getfirstMove()) {
-                        //if it is the first move,
-                    /*
+                    return false;
+                }
+            }
+            else {
+                if (chessboard.getPiece(pieceLocation).getfirstMove()) {
+                    //if it is the first move,
+                /*
 
-                    */
-                        if (pieceLocation.second + 1 == newPieceLocation.second)
-                        {
-                            //pieceLocation.second - 1 == newPieceLocation.second
-                            if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1))) {
-                                //check if there's nothing there
-                                return true;
-                            }
-                            else if (pieceLocation.second + 2 == newPieceLocation.second) {
-                                //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))
-                                //
-                                if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 2))) {
-                                    //check if there's something there
-                                    return true;
-                                }
-                                else {
-                                    //something is blocking the pawn
-                                    return false;
-                                }
-                            }
-                            else {
-                                if (pieceLocation.second + 2 == newPieceLocation.second) {
-                                    //check if the movement is within bounds
-                                    return true;
-                                }
-                                else {
-                                    return false;
-                                }
-                            }
-                        }
-
-                    }
-                    else if (pieceLocation.second + 1 == newPieceLocation.second)
+                */
+                    if (pieceLocation.second + 1 == newPieceLocation.second)
                     {
-                        //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))
+                        //pieceLocation.second - 1 == newPieceLocation.second
                         if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1))) {
-                            //check if the coast is clear
+                            //check if there's nothing there
                             return true;
                         }
+                        else if (pieceLocation.second + 2 == newPieceLocation.second) {
+                            //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 2))
+                            //
+                            if (chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 2))) {
+                                //check if there's something there
+                                return true;
+                            }
+                            else {
+                                //something is blocking the pawn
+                                return false;
+                            }
+                        }
                         else {
-                            //something is blocking the pawn
-                            return false;
+                            if (pieceLocation.second + 2 == newPieceLocation.second) {
+                                //check if the movement is within bounds
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
                         }
                     }
+
+                }
+                else if (pieceLocation.second + 1 == newPieceLocation.second)
+                {
+                    //chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second - 1))
+                    if (!chessboard.isTherePieceHere(std::make_pair(pieceLocation.first, pieceLocation.second + 1))) {
+                        //check if the coast is clear
+                        return true;
+                    }
                     else {
+                        //something is blocking the pawn
                         return false;
                     }
                 }
-            
+                else {
+                    return false;
+                }
+            }
         }
         }
         }
         }
         }
-    }
+        }
+        
+        
+        
+        
+
+        
+    
         
     
         
