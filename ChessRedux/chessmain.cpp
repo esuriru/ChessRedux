@@ -74,30 +74,89 @@ public:
             pieceRepresentation = 'B';
             std::pair<int, int> rightdiagonalMove = pieceLocation;
             std::pair<int, int> leftdiagonalMove = pieceLocation;
-            for (int i = 0; rightdiagonalMove.second == 0; i++)
+            int add = 0;
+            do {
+                //going up and right
+                if (rightdiagonalMove.first == 7) {
+                    break;
+                }
+                rightdiagonalMove.first = pieceLocation.first + add;
+                rightdiagonalMove.second = pieceLocation.second - add;
+                validMoves.push_back(rightdiagonalMove);
+                add++;
+
+            } while (rightdiagonalMove.second != 0);
+            //then
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going down and left
+                if (rightdiagonalMove.first == 0) {
+                    break;
+                }
+                rightdiagonalMove.first = pieceLocation.first - add;
+                rightdiagonalMove.second = pieceLocation.second + add;
+                validMoves.push_back(rightdiagonalMove);
+                add++;
+            } while (rightdiagonalMove.second != 7);
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going up and left
+                if (leftdiagonalMove.first == 0) {
+
+                    break;
+                }
+                leftdiagonalMove.first = pieceLocation.first - add;
+                leftdiagonalMove.second = pieceLocation.second - add;
+                validMoves.push_back(leftdiagonalMove);
+                add++;
+
+            } while (leftdiagonalMove.second != 0);
+            //then
+            add = 0;
+            rightdiagonalMove = pieceLocation;
+            leftdiagonalMove = pieceLocation;
+            do {
+                //going down and right
+                if (leftdiagonalMove.second == 7) {
+
+                    break;
+                }
+                leftdiagonalMove.first = pieceLocation.first - add;
+                leftdiagonalMove.second = pieceLocation.second + add;
+                validMoves.push_back(leftdiagonalMove);
+                add++;
+            } while (leftdiagonalMove.first != 7);
+
+
+
+            /*for (int i = 1; rightdiagonalMove.first < 7; i++)
             {
                 rightdiagonalMove.first = pieceLocation.first + i;
                 rightdiagonalMove.second = pieceLocation.second - i;
                 validMoves.push_back(rightdiagonalMove);
             }
-            for (int i = 0; rightdiagonalMove.second == 7; i++)
+            for (int i = 1; rightdiagonalMove.second < 7; i++)
             {
                 rightdiagonalMove.first = pieceLocation.first + i;
                 rightdiagonalMove.second = pieceLocation.second + i;
                 validMoves.push_back(rightdiagonalMove);
             }
-            for (int i = 0; leftdiagonalMove.second == 0; i++)
+            for (int i = 1; leftdiagonalMove.first < 0; i++)
             {
                 leftdiagonalMove.first = pieceLocation.first - i;
                 leftdiagonalMove.second = pieceLocation.second - i;
                 validMoves.push_back(leftdiagonalMove);
             }
-            for (int i = 0; leftdiagonalMove.second == 7; i++)
+            for (int i = 1; leftdiagonalMove.second < 7; i++)
             {
                 leftdiagonalMove.first = pieceLocation.first - i;
                 leftdiagonalMove.second = pieceLocation.second + i;
                 validMoves.push_back(leftdiagonalMove);
-            }
+            }*/
             break;
         }
         case PieceType::QUEEN:
@@ -394,11 +453,6 @@ public:
                 auto storebeforechange = arrayboard[chessPieceLocation.first][chessPieceLocation.second];
                 arrayboard[chessPieceLocation.first][chessPieceLocation.second] = arrayboard[newLocation.first][newLocation.second];
                 arrayboard[newLocation.first][newLocation.second] = storebeforechange;
-
-                /*
-                arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(newLocation);
-                arrayboard[newLocation.first][newLocation.second].setPieceLocation(storebeforechange.getPieceLocation());
-                */
                 arrayboard[chessPieceLocation.first][chessPieceLocation.second].setPieceLocation(storebeforechange.getPieceLocation());
                 arrayboard[newLocation.first][newLocation.second].setPieceLocation(newLocation);
 
@@ -466,15 +520,6 @@ public:
             chessboard.movePiece(pieceLocation, newPieceLocation);
             chessboard.resetBoard();
             chessboard.showBoard();
-            /*switch (movingPieceType) {
-            case PieceType::PAWN:
-                //is this valid? return true if yes, false if no
-            case PieceType::BISHOP:
-                //
-            case PieceType::KNIGHT:
-
-
-            }*/
         }
         else {
             std::cout << "that move was not possible" << std::endl;
@@ -512,6 +557,7 @@ public:
                 }
                 if (chessboard.getPiece(std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 - atoi(&playerinput[1]))).getColour() != currentTurn) {
                     std::cout << "It is "<< colourinTurn << "'s turn" << std::endl;
+                    continue;
                 }
             } while (chessboard.getPiece(std::make_pair(chessNotationtranslatechar(playerinput[0]), 8 - atoi(&playerinput[1]))).getColour() != currentTurn);
             if (currentTurn == Colour::WHITE) {
@@ -541,6 +587,4 @@ int main()
 {
     ChessGame game;
     game.newGame();
-
-
 }
