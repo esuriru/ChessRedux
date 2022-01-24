@@ -492,7 +492,11 @@ private:
 
     bool checkforSpace(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
         int move = 1;
+        
         switch (chessboard.getPiece(pieceLocation).getPieceType()) {
+        case PieceType::EMPTY:{
+                return true;
+            }
         case PieceType::BISHOP:
         {
             if (pieceLocation.first < newPieceLocation.first) {
@@ -2535,7 +2539,10 @@ private:
                                     chessboard.movePiece(std::make_pair(i, j + m), std::make_pair(i, j));
                                     return false;
                                 }
-                                else return true;
+                                else {
+                                    chessboard.movePiece(std::make_pair(i, j + m), std::make_pair(i, j));
+                                    return true;
+                                }
                             
                         }
                     }
@@ -2563,7 +2570,10 @@ private:
                                 chessboard.movePiece(std::make_pair(i, j - m), std::make_pair(i, j));
                                 return false;
                             }
-                            else return true;
+                            else {
+                                chessboard.movePiece(std::make_pair(i, j - m), std::make_pair(i, j));
+                                return true;
+                            }
                         }
                     }
                     else if (i + m >= 0 && i + m <= 7) {
@@ -2590,7 +2600,10 @@ private:
                                 chessboard.movePiece(std::make_pair(i + m, j), std::make_pair(i, j));
                                 return false;
                             }
-                            else return true;
+                            else {
+                                chessboard.movePiece(std::make_pair(i + m, j), std::make_pair(i, j));
+                                return true;
+                            }
                         }
                     }
                     else if (i - m >= 0 && i - m <= 7) {
@@ -2617,7 +2630,10 @@ private:
                                 chessboard.movePiece(std::make_pair(i - m, j), std::make_pair(i, j));
                                 return false;
                             }
-                            else return true;
+                            else {
+                                chessboard.movePiece(std::make_pair(i - m, j), std::make_pair(i, j));
+                                return true;
+                            }
 
                         }
                     }
@@ -2650,7 +2666,10 @@ private:
                                 chessboard.movePiece(std::make_pair(i - m, j - m), std::make_pair(i, j));
                                 return false;
                             }
-                            else return true;
+                            else {
+                                chessboard.movePiece(std::make_pair(i - m, j - m), std::make_pair(i, j));
+                                return true;
+                            }
                         }
                     }
                     else if (i - m >= 0 && i - m <= 7 && j + m >= 0 && j + m <= 7) {
@@ -2683,7 +2702,10 @@ private:
                                 chessboard.movePiece(std::make_pair(i - m, j + m), std::make_pair(i, j));
                                 return false;
                             }
-                            else return true;
+                            else {
+                                chessboard.movePiece(std::make_pair(i - m, j + m), std::make_pair(i, j));
+                                return true;
+                            }
                         }
                     }
                     else if (i + m >= 0 && i + m <= 7 && j + m >= 0 && j + m <= 7) {
@@ -2716,7 +2738,10 @@ private:
                                 chessboard.movePiece(std::make_pair(i + m, j + m), std::make_pair(i, j));
                                 return false;
                             }
-                            else return true;
+                            else {
+                                chessboard.movePiece(std::make_pair(i + m, j + m), std::make_pair(i, j));
+                                return true;
+                            }
                         }
                     }
                     else if (i + m >= 0 && i + m <= 7 && j - m >= 0 && j - m <= 7) {
@@ -2748,7 +2773,10 @@ private:
                                 chessboard.movePiece(std::make_pair(i + m, j - m), std::make_pair(i, j));
                                 return false;
                             }
-                            else return true;
+                            else {
+                                chessboard.movePiece(std::make_pair(i + m, j - m), std::make_pair(i, j));
+                                return true;
+                            }
                         }
                     }
                     else continue;
@@ -2784,8 +2812,8 @@ public:
                         chessboard.movePiece(pieceLocation, newPieceLocation);
                         chessboard.resetBoard();
                         chessboard.showBoard();
-                        std::cout << "White has won.";
-                        std::exit;
+                        std::cout << "White has won." << std::endl;
+                        gameRunning = false;
                         
 
                     }
@@ -2793,8 +2821,10 @@ public:
                         chessboard.movePiece(pieceLocation, newPieceLocation);
                         chessboard.resetBoard();
                         chessboard.showBoard();
-                        std::cout << "Black has won.";
-                        std::exit;
+                        std::cout << "Black has won." << std::endl;
+                        gameRunning = false;
+
+                        
                         
                     }
                 }
@@ -2913,7 +2943,7 @@ public:
         //by the way, pair input is basically like '1a' because rest of program is program with .first being x and .second being y
         //test knight by b8->c6, keeping these comments here in case some conversion goes awry
 
-        std::cout << "break";
+        std::cout << "Thank you for playing!";
     }
     int chessNotationtranslatechar(char a) {
         return int(a) - 97;
