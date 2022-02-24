@@ -14,7 +14,6 @@ private:
     Colour colour;
     char pieceRepresentation;
     std::pair<int, int> pieceLocation;
-    std::vector<std::pair<int, int>> validMoves;
     bool firstMove;
     
 
@@ -87,7 +86,7 @@ public:
         case PieceType::EMPTY:
         {
             pieceRepresentation = ' ';
-            validMoves.clear();
+
             //it's empty lol
             break;
         }
@@ -102,16 +101,8 @@ public:
             }
         }*/
     }
-    std::vector<std::pair<int, int>> getValidMoves() {
-        return validMoves;
-    }
-    void setValidMoves(std::vector<std::pair<int, int>> input) {
-        validMoves.clear();
-        for (int i = 0; i < input.size(); i++)
-        {
-            validMoves.push_back(input[i]);
-        }
-    }
+
+
     PieceType getPieceType() {
         return piecetype;
     }
@@ -149,11 +140,7 @@ public:
 
 class ChessBoard {
 private:
-    ChessPiece arrayboard[8][8];
-    std::vector < std::pair<int, int>> newvalidMoves;
-    
-
-
+    ChessPiece arrayboard[8][8];    
 public:
     ChessBoard() {
         //the creation of pieces
@@ -264,7 +251,7 @@ public:
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++)
             {
-                //std::cout << "  " << arrayboard[j][i].getPieceRepresentation() << "  ";
+                
                 if (arrayboard[j][i].getPieceLocation().first == 0 && arrayboard[j][i].getPieceType() != PieceType::EMPTY) {
                     std::cout << 8-i << " " << arrayboard[j][i].getPieceRepresentation() << "  ";
                 }
@@ -465,6 +452,14 @@ private:
 
                 }
                 else if (chessboard.getPiece(pieceLocation).getColour() != chessboard.getPiece(newPieceLocation).getColour()) {
+                    if (checkEvent) {
+                        if (newPieceLocation == checkingpieceLocation) {
+                            if (checkforSpace(newPieceLocation, checkingpieceLocation)) {
+                                return true;
+                            }
+                            else return false;
+                        }
+                    }
                     if (checkforSpace(pieceLocation, newPieceLocation)) {
                         return true; //there is space for it to move there
                     }
@@ -2077,6 +2072,16 @@ private:
     }
     bool checkifPieceisChecking(PieceType type, std::pair<int, int> input, std::pair<int, int> king) {
         //use this overload if the move has not occured yet, and then the intake type is the original location, not moved
+        if (king.first < 0
+            ||
+            king.first > 7
+            ||
+            king.second < 0
+            ||
+            king.second > 7)
+        {
+            return true;
+        }
         int move = 1;
         switch (type) {
         case PieceType::BISHOP: {
@@ -2922,156 +2927,41 @@ private:
 
         }
     }
-    bool isMoveCheck(std::pair<int, int> newPieceLocation) {
-        Colour ColourinQuestion = chessboard.getPiece(newPieceLocation).getColour();
-        std::pair<int, int> kingsLocation;
-        if (ColourinQuestion == Colour::WHITE) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (chessboard.getchesspiecearray()[j][i].getColour() == Colour::BLACK && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
-                        kingsLocation = chessboard.getchesspiecearray()[j][i].getPieceLocation();
-                    }
+    
+    std::pair<int, int> getkingsLocation(Colour kingColour) {
+        
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++)
+            {
+                if (chessboard.getchesspiecearray()[j][i].getColour() == kingColour && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
+                    return chessboard.getchesspiecearray()[j][i].getPieceLocation();
                 }
+            }
 
-            }
-            if (!checkforSpace(newPieceLocation, kingsLocation)) {
-                //look for the black king, if the king is blocking the path,
-                if (checkifPieceisChecking(newPieceLocation, kingsLocation)) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (chessboard.getchesspiecearray()[j][i].getColour() == Colour::WHITE && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
-                        kingsLocation = chessboard.getchesspiecearray()[j][i].getPieceLocation();
-                        break;
-                    }
-                }
-
-            }
-            if (!checkforSpace(newPieceLocation, kingsLocation)) {
-                //look for the white king, if the king is blocking the path,
-                if (checkifPieceisChecking(newPieceLocation, kingsLocation)) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
-        }
-    }
-    bool isMoveCheck(PieceType inputtype, std::pair<int, int> newPieceLocation) {
-        Colour ColourinQuestion = chessboard.getPiece(newPieceLocation).getColour();
-        std::pair<int, int> kingsLocation;
-        if (ColourinQuestion == Colour::WHITE) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (chessboard.getchesspiecearray()[j][i].getColour() == Colour::BLACK && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
-                        kingsLocation = chessboard.getchesspiecearray()[j][i].getPieceLocation();
-                    }
-                }
-
-            }
-            if (!checkforSpace(newPieceLocation, kingsLocation)) {
-                //look for the black king, if the king is blocking the path,
-                if (checkifPieceisChecking(inputtype, newPieceLocation, kingsLocation)) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (chessboard.getchesspiecearray()[j][i].getColour() == Colour::WHITE && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
-                        kingsLocation = chessboard.getchesspiecearray()[j][i].getPieceLocation();
-                        break;
-                    }
-                }
-
-            }
-            if (!checkforSpace(newPieceLocation, kingsLocation)) {
-                //look for the white king, if the king is blocking the path,
-                if (checkEvent){
-                    if (checkifPieceisChecking(inputtype, newPieceLocation, kingsLocation)) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
-                }
-                if (checkifPieceisChecking(inputtype, newPieceLocation, kingsLocation)) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-            else {
-                return false;
-            }
         }
     }
     bool isMoveCheck(PieceType inputtype, Colour inputcolour, std::pair<int, int> newPieceLocation) {
         Colour ColourinQuestion = inputcolour;
         std::pair<int, int> kingsLocation;
         if (ColourinQuestion == Colour::WHITE) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (chessboard.getchesspiecearray()[j][i].getColour() == Colour::BLACK && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
-                        kingsLocation = chessboard.getchesspiecearray()[j][i].getPieceLocation();
-                    }
-                }
-
-            }
-            if (!checkforSpace(inputtype, newPieceLocation, kingsLocation)) {
-                //look for the black king, if the king is blocking the path,
-                if (checkifPieceisChecking(inputtype, newPieceLocation, kingsLocation)) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-
+            kingsLocation = getkingsLocation(Colour::BLACK);
+        
+        if (!checkforSpace(inputtype, newPieceLocation, kingsLocation)) {
+            //look for the black king, if the king is blocking the path,
+            if (checkifPieceisChecking(inputtype, newPieceLocation, kingsLocation)) {
+                return true;
             }
             else {
                 return false;
             }
+
         }
         else {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++)
-                {
-                    if (chessboard.getchesspiecearray()[j][i].getColour() == Colour::WHITE && chessboard.getchesspiecearray()[j][i].getPieceType() == PieceType::KING) {
-                        kingsLocation = chessboard.getchesspiecearray()[j][i].getPieceLocation();
-                        break;
-                    }
-                }
-
-            }
+            return false;
+        }
+        }
+        else {
+            kingsLocation = getkingsLocation(Colour::WHITE);
             if (!checkforSpace(inputtype, newPieceLocation, kingsLocation)) {
                 //look for the white king, if the king is blocking the path,
                 if (checkifPieceisChecking(inputtype, newPieceLocation, kingsLocation)) {
@@ -3085,330 +2975,101 @@ private:
                 return false;
             }
         }
-    }
+        }
+    
+    
     bool checkifCheckmate(PieceType beforemoveType, Colour beforemoveColour, std::pair<int, int> aftermoveLocation) {
         //if the movepiece is taking a piece that is not the original piece, then there is no way that there is check in the first place.
-        for (int i = 0; i < 8; i++)
+        //check if something can take that piece
+        for  (int i = 0; i < 8; i++)
         {
-            for (int j = 0; j < 8; j++) {
-                for (int m = 0; m < 8; m++) {
-                    //8 steps is supposedly how far a piece can travel;
-
-                    if (j + m >= 0 && j + m <= 7) {
-                        if (chessboard.getPiece(std::make_pair(i, j)).getColour() != beforemoveColour) {
-                            continue;
-                        }
-                        if (validNewPieceLocation(std::make_pair(i, j), std::make_pair(i, j + m))) {
-                            
-
-                                
-                                if (std::make_pair(i, j + m) == checkingpieceLocation) {
-                                    //suppose that the piece you are checking is able to be taken by the king himself, is he still vulnerable?
-                                    if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::KING) {
-                                        chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                        for (int n = 0; n < 8; n++)
-                                        {
-                                            for (int o = 0; o < 8; o++) {
-                                                if (checkifPieceisChecking(std::make_pair(n, o), checkingpieceLocation)) {
-                                                    
-                                                    return true;
-                                                }
-                                            }
-                                        }
-                                        //if finally, there is actually nothing there to cover that piece, definitely checkmate
-                                        chessboard.movePiece(checkingpieceLocation, std::make_pair(i, j));
-                                        return false;
-                                    }
-                                    else continue;
-                                }
-                                chessboard.movePiece(std::make_pair(i, j), std::make_pair(i, j + m));
-                                if (!isMoveCheck(beforemoveType, beforemoveColour, aftermoveLocation)) { //change the type
-                                    chessboard.movePiece(std::make_pair(i, j + m), std::make_pair(i, j));
-                                    return false;
-                                }
-                                else {
-                                    chessboard.movePiece(std::make_pair(i, j + m), std::make_pair(i, j));
-                                    continue;
-                                }
-                            
-                        }
-                    }
-                    else if (j - m >= 0 && j - m <= 7) {
-                        if (validNewPieceLocation(std::make_pair(i, j), std::make_pair(i, j - m))) {
-                            if (chessboard.getPiece(std::make_pair(i, j)).getColour() != beforemoveColour) {
-                                continue;
-                            }
-                            if (std::make_pair(i, j - m) == checkingpieceLocation) {
-                                //suppose that the piece you are checking is able to be taken by the king himself, is he still vulnerable?
-                                if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::KING) {
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    for (int n = 0; n < 8; n++)
-                                    {
-                                        for (int o = 0; o < 8; o++) {
-                                            if (checkifPieceisChecking(std::make_pair(n, o), checkingpieceLocation)) {
-                                                
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                    //if finally, there is actually nothing there to cover that piece,
-                                    chessboard.movePiece(checkingpieceLocation, std::make_pair(i, j));
-                                    return false;
-                                }
-                                else continue;
-                            }
-                            chessboard.movePiece(std::make_pair(i, j), std::make_pair(i, j - m));
-                            if (!isMoveCheck(beforemoveType, beforemoveColour, aftermoveLocation)) {
-                                chessboard.movePiece(std::make_pair(i, j - m), std::make_pair(i, j));
-                                return false;
-                            }
-                            else {
-                                chessboard.movePiece(std::make_pair(i, j - m), std::make_pair(i, j));
-                                continue;
-                            }
-                        }
-                    }
-                    else if (i + m >= 0 && i + m <= 7) {
-                        if (validNewPieceLocation(std::make_pair(i, j), std::make_pair(i + m, j))) {
-                            if (chessboard.getPiece(std::make_pair(i, j)).getColour() != beforemoveColour) {
-                                continue;
-                            }
-                            if (std::make_pair(i + m, j) == checkingpieceLocation) {
-                                //suppose that the piece you are checking is able to be taken by the king himself, is he still vulnerable?
-                                if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::KING) {
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    for (int n = 0; n < 8; n++)
-                                    {
-                                        for (int o = 0; o < 8; o++) {
-                                            if (checkifPieceisChecking(std::make_pair(n, o), checkingpieceLocation)) {
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                    //if finally, there is actually nothing there to cover that piece,
-                                    chessboard.movePiece(checkingpieceLocation, std::make_pair(i, j));
-                                    return false;
-                                }
-                                else continue;
-                            }
-                            chessboard.movePiece(std::make_pair(i, j), std::make_pair(i + m, j));
-                            if (!isMoveCheck(beforemoveType, beforemoveColour, aftermoveLocation)) {
-                                chessboard.movePiece(std::make_pair(i + m, j), std::make_pair(i, j));
-                                return false;
-                            }
-                            else {
-                                chessboard.movePiece(std::make_pair(i + m, j), std::make_pair(i, j));
-                                continue;
-                            }
-                        }
-                    }
-                    else if (i - m >= 0 && i - m <= 7) {
-                        if (validNewPieceLocation(std::make_pair(i, j), std::make_pair(i - m, j))) {
-                            if (chessboard.getPiece(std::make_pair(i, j)).getColour() != beforemoveColour) {
-                                continue;
-                            }
-                            if (std::make_pair(i - m, j) == checkingpieceLocation) {
-                                //suppose that the piece you are checking is able to be taken by the king himself, is he still vulnerable?
-                                if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::KING) {
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    for (int n = 0; n < 8; n++)
-                                    {
-                                        for (int o = 0; o < 8; o++) {
-                                            if (checkifPieceisChecking(std::make_pair(n, o), checkingpieceLocation)) {
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                    //if finally, there is actually nothing there to cover that piece,
-                                    chessboard.movePiece(checkingpieceLocation, std::make_pair(i, j));
-                                    return false;
-                                }
-                                else continue;
-                            }
-                            chessboard.movePiece(std::make_pair(i, j), std::make_pair(i - m, j));
-                            if (!isMoveCheck(beforemoveType, beforemoveColour, aftermoveLocation)) {
-                                chessboard.movePiece(std::make_pair(i - m, j), std::make_pair(i, j));
-                                return false;
-                            }
-                            else {
-                                chessboard.movePiece(std::make_pair(i - m, j), std::make_pair(i, j));
-                                continue;
-                            }
-
-                        }
-                    }
-                    else if (i - m >= 0 && i - m <= 7 && j - m >= 0 && j - m <= 7) {
-                        if (validNewPieceLocation(std::make_pair(i, j), std::make_pair(i - m, j - m))) {
-                            if (chessboard.getPiece(std::make_pair(i, j)).getColour() != beforemoveColour) {
-                                continue;
-                            }
-                            if (std::make_pair(i - m, j - m) == checkingpieceLocation) {
-                                //suppose that the piece you are checking is able to be taken by the king himself, is he still vulnerable?
-                                if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::KING) {
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    for (int n = 0; n < 8; n++)
-                                    {
-                                        for (int o = 0; o < 8; o++) {
-                                            if (checkifPieceisChecking(std::make_pair(n, o), checkingpieceLocation)) {
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                    //if finally, there is actually nothing there to cover that piece,
-                                    chessboard.movePiece(checkingpieceLocation, std::make_pair(i, j));
-                                    return false;
-                                }
-                                //it could be a pawn moving upwards left
-                                else if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::PAWN && chessboard.getPiece(std::make_pair(i, j)).getColour() == Colour::WHITE && m == 1) {
-                                    //it takes that piece, leaving the king safe as he is stationary.
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    return false;
-                                }
-                                else continue;
-                            }
-                            chessboard.movePiece(std::make_pair(i, j), std::make_pair(i - m, j - m));
-                            if (!isMoveCheck(beforemoveType, beforemoveColour, aftermoveLocation)) {
-                                chessboard.movePiece(std::make_pair(i - m, j - m), std::make_pair(i, j));
-                                return false;
-                            }
-                            else {
-                                chessboard.movePiece(std::make_pair(i - m, j - m), std::make_pair(i, j));
-                                continue;
-                            }
-                        }
-                    }
-                    else if (i - m >= 0 && i - m <= 7 && j + m >= 0 && j + m <= 7) {
-                        if (validNewPieceLocation(std::make_pair(i, j), std::make_pair(i - m, j + m))) {
-                            if (chessboard.getPiece(std::make_pair(i, j)).getColour() != beforemoveColour) {
-                                continue;
-                            }
-                            if (std::make_pair(i - m, j + m) == checkingpieceLocation) {
-                                //suppose that the piece you are checking is able to be taken by the king himself, is he still vulnerable?
-                                if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::KING) {
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    for (int n = 0; n < 8; n++)
-                                    {
-                                        for (int o = 0; o < 8; o++) {
-                                            if (checkifPieceisChecking(std::make_pair(n, o), checkingpieceLocation)) {
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                    //if finally, there is actually nothing there to cover that piece,
-                                    chessboard.movePiece(checkingpieceLocation, std::make_pair(i, j));
-                                    return false;
-                                }
-                                //it could be a pawn moving downwards left
-                                else if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::PAWN && chessboard.getPiece(std::make_pair(i, j)).getColour() == Colour::BLACK && m == 1) {
-                                    //it takes that piece, leaving the king safe as he is stationary.
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    return false;
-                                }
-                                else continue;
-                            
-                            }
-                            chessboard.movePiece(std::make_pair(i, j), std::make_pair(i - m, j + m));
-                            if (!isMoveCheck(beforemoveType, beforemoveColour, aftermoveLocation)) {
-                                chessboard.movePiece(std::make_pair(i - m, j + m), std::make_pair(i, j));
-                                return false;
-                            }
-                            else {
-                                chessboard.movePiece(std::make_pair(i - m, j + m), std::make_pair(i, j));
-                                continue;
-                            }
-                        }
-                    }
-                    else if (i + m >= 0 && i + m <= 7 && j + m >= 0 && j + m <= 7) {
-                        if (validNewPieceLocation(std::make_pair(i, j), std::make_pair(i + m, j + m))) {
-                            if (chessboard.getPiece(std::make_pair(i, j)).getColour() != beforemoveColour) {
-                                continue;
-                            }
-                            if (std::make_pair(i + m, j + m) == checkingpieceLocation) {
-                                //suppose that the piece you are checking is able to be taken by the king himself, is he still vulnerable?
-                                if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::KING) {
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    for (int n = 0; n < 8; n++)
-                                    {
-                                        for (int o = 0; o < 8; o++) {
-                                            if (checkifPieceisChecking(std::make_pair(n, o), checkingpieceLocation)) {
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                    //if finally, there is actually nothing there to cover that piece,
-                                    chessboard.movePiece(checkingpieceLocation, std::make_pair(i, j));
-                                    return false;
-                                }
-                                //it could be a pawn moving downwards right
-                                else if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::PAWN && chessboard.getPiece(std::make_pair(i, j)).getColour() == Colour::BLACK && m == 1) {
-                                    //it takes that piece, leaving the king safe as he is stationary.
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    return false;
-                                }
-                                else continue;
-                            }
-                            
-                            chessboard.movePiece(std::make_pair(i, j), std::make_pair(i + m, j + m));
-                            if (!isMoveCheck(beforemoveType, beforemoveColour, aftermoveLocation)) {
-                                chessboard.movePiece(std::make_pair(i + m, j + m), std::make_pair(i, j));
-                                return false;
-                            }
-                            else {
-                                chessboard.movePiece(std::make_pair(i + m, j + m), std::make_pair(i, j));
-                                continue;
-                            }
-                        }
-                    }
-                    else if (i + m >= 0 && i + m <= 7 && j - m >= 0 && j - m <= 7) {
-                        if (validNewPieceLocation(std::make_pair(i, j), std::make_pair(i + m, j - m))) {
-                            if (chessboard.getPiece(std::make_pair(i, j)).getColour() != beforemoveColour) {
-                                continue;
-                            }
-                            if (std::make_pair(i + m, j - m) == checkingpieceLocation) {
-                                //suppose that the piece you are checking is able to be taken by the king himself, is he still vulnerable?
-                                if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::KING) {
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    for (int n = 0; n < 8; n++)
-                                    {
-                                        for (int o = 0; o < 8; o++) {
-                                            if (checkifPieceisChecking(std::make_pair(n, o), checkingpieceLocation)) {
-                                                return true;
-                                            }
-                                        }
-                                    }
-                                    //if finally, there is actually nothing there to cover that piece,
-                                    chessboard.movePiece(checkingpieceLocation, std::make_pair(i, j));
-                                    return false;
-                                }
-                                //it could be a pawn moving upwards right
-                                else if (chessboard.getPiece(std::make_pair(i, j)).getPieceType() == PieceType::PAWN && chessboard.getPiece(std::make_pair(i, j)).getColour() == Colour::WHITE && m == 1) {
-                                    //it takes that piece, leaving the king safe as he is stationary.
-                                    chessboard.movePiece(std::make_pair(i, j), checkingpieceLocation);
-                                    return false;
-                                }
-                                else continue;
-                            }
-                            chessboard.movePiece(std::make_pair(i, j), std::make_pair(i + m, j - m));
-                            if (!isMoveCheck(beforemoveType, beforemoveColour, aftermoveLocation)) {
-                                chessboard.movePiece(std::make_pair(i + m, j - m), std::make_pair(i, j));
-                                return false;
-                            }
-                            else {
-                                chessboard.movePiece(std::make_pair(i + m, j - m), std::make_pair(i, j));
-                                continue;
-                            }
-                        }
+            for (int j = 0; i < 8; j++) {
+                if (beforemoveColour == Colour::WHITE) {
+                    if (chessboard.getPiece(std::make_pair(i, j)).getColour() == Colour::BLACK) {
+                        
                     }
                     else continue;
-
-
                 }
-
             }
-
         }
-        return true;
+        //check if the king can move out of the check
+        if (beforemoveColour == Colour::WHITE) {
+            if (
+                !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                    chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                    std::make_pair(getkingsLocation(Colour::BLACK).first + 1, getkingsLocation(Colour::BLACK).second))
+                ||
+                !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                    chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                    std::make_pair(getkingsLocation(Colour::BLACK).first - 1, getkingsLocation(Colour::BLACK).second))
+                ||
+                !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                    chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                    std::make_pair(getkingsLocation(Colour::BLACK).first, getkingsLocation(Colour::BLACK).second + 1))
+                ||
+                !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                    chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                    std::make_pair(getkingsLocation(Colour::BLACK).first, getkingsLocation(Colour::BLACK).second - 1))
+                ||
+                !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                    chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                    std::make_pair(getkingsLocation(Colour::BLACK).first + 1, getkingsLocation(Colour::BLACK).second + 1))
+                ||
+                !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                    chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                    std::make_pair(getkingsLocation(Colour::BLACK).first + 1, getkingsLocation(Colour::BLACK).second - 1))
+                ||
+                !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                    chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                    std::make_pair(getkingsLocation(Colour::BLACK).first - 1, getkingsLocation(Colour::BLACK).second + 1))
+                ||
+                !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                    chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                    std::make_pair(getkingsLocation(Colour::BLACK).first - 1, getkingsLocation(Colour::BLACK).second - 1))
+                ) {
+                return false;
+            }
+            else return true;
+        }
+        else if (
+            !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                std::make_pair(getkingsLocation(Colour::WHITE).first + 1, getkingsLocation(Colour::WHITE).second))
+            ||
+            !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                std::make_pair(getkingsLocation(Colour::WHITE).first - 1, getkingsLocation(Colour::WHITE).second))
+            ||
+            !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                std::make_pair(getkingsLocation(Colour::WHITE).first, getkingsLocation(Colour::WHITE).second + 1))
+            ||
+            !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                std::make_pair(getkingsLocation(Colour::WHITE).first, getkingsLocation(Colour::WHITE).second - 1))
+            ||
+            !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                std::make_pair(getkingsLocation(Colour::WHITE).first + 1, getkingsLocation(Colour::WHITE).second + 1))
+            ||
+            !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                std::make_pair(getkingsLocation(Colour::WHITE).first + 1, getkingsLocation(Colour::WHITE).second - 1))
+            ||
+            !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                std::make_pair(getkingsLocation(Colour::WHITE).first - 1, getkingsLocation(Colour::WHITE).second + 1))
+            ||
+            !checkifPieceisChecking(chessboard.getPiece(checkingpieceLocation).getPieceType(),
+                chessboard.getPiece(checkingpieceLocation).getPieceLocation(),
+                std::make_pair(getkingsLocation(Colour::WHITE).first - 1, getkingsLocation(Colour::WHITE).second - 1))
+            ) {
+            return false;
+        }
+        else return true;
     }
+        
+
 
 public:
     
@@ -3450,7 +3111,7 @@ public:
                 }
                 else {
                     chessboard.movePiece(pieceLocation, newPieceLocation);
-                    if (!isMoveCheck(chessboard.getPiece(checkingpieceLocation).getPieceType(), checkingpieceLocation)) {
+                    if (!isMoveCheck(chessboard.getPiece(checkingpieceLocation).getPieceType(), chessboard.getPiece(checkingpieceLocation).getColour(), checkingpieceLocation)) {
                         checkEvent = false;
 
                         chessboard.resetBoard();
@@ -3469,7 +3130,7 @@ public:
             else {
                 PieceType movingPieceType = chessboard.getPiece(pieceLocation).getPieceType();
                 chessboard.movePiece(pieceLocation, newPieceLocation);
-                if (!isMoveCheck(chessboard.getPiece(checkingpieceLocation).getPieceType(), checkingpieceLocation)) {
+                if (!isMoveCheck(chessboard.getPiece(checkingpieceLocation).getPieceType(), chessboard.getPiece(checkingpieceLocation).getColour(), checkingpieceLocation)) {
                     checkEvent = false;
 
                     chessboard.resetBoard();
@@ -3562,7 +3223,7 @@ public:
         } while (gameRunning);
         
         //by the way, pair input is basically like '1a' because rest of program is program with .first being x and .second being y
-        //test knight by b8->c6, keeping these comments here in case some conversion goes awry
+        //test knight by b8--c6, keeping these comments here in case some conversion goes awry
 
         std::cout << "Thank you for playing!";
     }
