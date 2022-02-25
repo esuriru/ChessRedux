@@ -241,7 +241,15 @@ public:
 
         
     }
-
+    ChessPiece getKing(Colour kingColour) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (getPiece(std::make_pair(j, i)).getColour() == kingColour && getPiece(std::make_pair(j, i)).getPieceType() == PieceType::KING) {
+                    return getPiece(std::make_pair(j, i));
+                }
+            }
+        }
+    }
     bool isMoveLegal(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
         bool takingPiece;
         if (getPiece(newPieceLocation).getPieceType() == PieceType::EMPTY) {
@@ -831,7 +839,7 @@ public:
         case PieceType::QUEEN: {
             if (pieceLocation.first > newPieceLocation.first) {
                 //moving to the left
-                if (pieceLocation.second == pieceLocation.second) {
+                if (pieceLocation.second == newPieceLocation.second) {
                     for (int i = 1; i < pieceLocation.first - newPieceLocation.first; i++) {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first - i, pieceLocation.second)).getPieceType() == PieceType::EMPTY) {
@@ -878,7 +886,7 @@ public:
             }
             else if (pieceLocation.first < newPieceLocation.first) {
                 //moving to the right
-                if (pieceLocation.second == pieceLocation.second) {
+                if (pieceLocation.second == newPieceLocation.second) {
                     for (int i = 1; i < newPieceLocation.first - pieceLocation.first; i++) {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first + i, pieceLocation.second)).getPieceType() == PieceType::EMPTY) {
@@ -968,7 +976,10 @@ private:
     bool gameRunning;
     Colour currentTurn;
     
-    bool isMoveCheck(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {};
+    bool isMoveCheck(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
+        Colour enemykingColour = (chessboard.getPiece(pieceLocation).getColour() == Colour::BLACK) ? Colour::WHITE : Colour::BLACK;
+        return chessboard.isMoveLegal(newPieceLocation, chessboard.getKing(enemykingColour).getpieceLocation(), true);
+    }
     bool isMoveCheckMate(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {};
 
 public:
@@ -1333,10 +1344,14 @@ public:
             }
         }
     }
-    void makeMove(ChessPiece from, std::pair<int, int> newPieceLocation) {
+    void makeMove(ChessPiece from, std::pair<int, int> newPieceLocation) {        
         chessboard.movePiece(from, newPieceLocation);
         chessboard.resetBoard();
         chessboard.showBoard();
+        bool checkEvent = isMoveCheck(from.getpieceLocation(), newPieceLocation);
+        if (checkEvent) {
+            std::cout << "In check" << std::endl;
+        }
         switch (currentTurn) {
         case Colour::WHITE:
             currentTurn = Colour::BLACK;
@@ -1364,6 +1379,7 @@ public:
                 }
             }
             std::cout << "There was no movable pieces." << std::endl;
+            
             
     }
 };
