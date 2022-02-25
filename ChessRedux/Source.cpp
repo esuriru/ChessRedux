@@ -620,11 +620,14 @@ public:
 
         }
         case PieceType::BISHOP: {
+            if (pieceLocation.second == newPieceLocation.second || pieceLocation.first == newPieceLocation.first) {
+                return false;
+            }
             if (pieceLocation.first > newPieceLocation.first) {
                 //moving to the left
                 if (pieceLocation.second > newPieceLocation.second) {
                     //moving upwards
-                    for (int i = 0; i < pieceLocation.second - newPieceLocation.second; i++)
+                    for (int i = 1; i < pieceLocation.second - newPieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first - i, pieceLocation.second - i)).getPieceType() == PieceType::EMPTY) {
@@ -640,7 +643,7 @@ public:
                 }
                 else {
                     //moving downwards
-                    for (int i = 0; i < newPieceLocation.second - pieceLocation.second; i++)
+                    for (int i = 1; i < newPieceLocation.second - pieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first - i, pieceLocation.second + i)).getPieceType() == PieceType::EMPTY) {
@@ -659,7 +662,7 @@ public:
                 //moving to the right
                 if (pieceLocation.second > newPieceLocation.second) {
                     //moving upwards
-                    for (int i = 0; i < pieceLocation.second - newPieceLocation.second; i++)
+                    for (int i = 1; i < pieceLocation.second - newPieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first + i, pieceLocation.second - i)).getPieceType() == PieceType::EMPTY) {
@@ -676,7 +679,7 @@ public:
                 }
                 else {
                     //moving downwards
-                    for (int i = 0; i < newPieceLocation.second - pieceLocation.second; i++)
+                    for (int i = 1; i < newPieceLocation.second - pieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first + i, pieceLocation.second + i)).getPieceType() == PieceType::EMPTY) {
@@ -694,11 +697,14 @@ public:
             break;
         }
         case PieceType::ROOK: {
+            if (pieceLocation.second != newPieceLocation.second && pieceLocation.first != newPieceLocation.first) {
+                return false;
+            }
             if (pieceLocation.second == newPieceLocation.second) {
 
                 if (pieceLocation.first > newPieceLocation.first) {
                     //moving to the left
-                    for (int i = 0; i < pieceLocation.first - newPieceLocation.first; i++)
+                    for (int i = 1; i < pieceLocation.first - newPieceLocation.first; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first - i, pieceLocation.second)).getPieceType() == PieceType::EMPTY) {
@@ -714,7 +720,7 @@ public:
                 }
                 else {
                     //moving to the right
-                    for (int i = 0; i < newPieceLocation.first - pieceLocation.first; i++)
+                    for (int i = 1; i < newPieceLocation.first - pieceLocation.first; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first + i, pieceLocation.second)).getPieceType() == PieceType::EMPTY) {
@@ -732,7 +738,7 @@ public:
             else {
                 if (pieceLocation.second > newPieceLocation.second) {
                     //moving upwards
-                    for (int i = 0; i < pieceLocation.second - newPieceLocation.second; i++)
+                    for (int i = 1; i < pieceLocation.second - newPieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first, pieceLocation.second - i)).getPieceType() == PieceType::EMPTY) {
@@ -749,7 +755,7 @@ public:
                 }
                 else {
                     //moving downwards
-                    for (int i = 0; i < newPieceLocation.second - pieceLocation.second; i++)
+                    for (int i = 1; i < newPieceLocation.second - pieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first, pieceLocation.second + i)).getPieceType() == PieceType::EMPTY) {
@@ -826,7 +832,7 @@ public:
             if (pieceLocation.first > newPieceLocation.first) {
                 //moving to the left
                 if (pieceLocation.second == pieceLocation.second) {
-                    for (int i = 0; i < pieceLocation.first - newPieceLocation.first; i++) {
+                    for (int i = 1; i < pieceLocation.first - newPieceLocation.first; i++) {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first - i, pieceLocation.second)).getPieceType() == PieceType::EMPTY) {
                             continue;
@@ -839,7 +845,7 @@ public:
                 }
                 else if (pieceLocation.second > newPieceLocation.second) {
                     //moving upwards
-                    for (int i = 0; i < pieceLocation.second - newPieceLocation.second; i++)
+                    for (int i = 1; i < pieceLocation.second - newPieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first - i, pieceLocation.second - i)).getPieceType() == PieceType::EMPTY) {
@@ -855,7 +861,7 @@ public:
                 }
                 else {
                     //moving downwards
-                    for (int i = 0; i < newPieceLocation.second - pieceLocation.second; i++)
+                    for (int i = 1; i < newPieceLocation.second - pieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first - i, pieceLocation.second + i)).getPieceType() == PieceType::EMPTY) {
@@ -873,7 +879,7 @@ public:
             else if (pieceLocation.first < newPieceLocation.first) {
                 //moving to the right
                 if (pieceLocation.second == pieceLocation.second) {
-                    for (int i = 0; i < newPieceLocation.first - pieceLocation.first; i++) {
+                    for (int i = 1; i < newPieceLocation.first - pieceLocation.first; i++) {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first + i, pieceLocation.second)).getPieceType() == PieceType::EMPTY) {
                             continue;
@@ -886,7 +892,7 @@ public:
                 }
                 if (pieceLocation.second > newPieceLocation.second) {
                     //moving upwards
-                    for (int i = 0; i < pieceLocation.second - newPieceLocation.second; i++)
+                    for (int i = 1; i < pieceLocation.second - newPieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first + i, pieceLocation.second - i)).getPieceType() == PieceType::EMPTY) {
@@ -903,7 +909,7 @@ public:
                 }
                 else {
                     //moving downwards
-                    for (int i = 0; i < newPieceLocation.second - pieceLocation.second; i++)
+                    for (int i = 1; i < newPieceLocation.second - pieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first + i, pieceLocation.second + i)).getPieceType() == PieceType::EMPTY) {
@@ -922,7 +928,7 @@ public:
                 //moving in the y-axis
                 if (pieceLocation.second > newPieceLocation.second) {
                     //moving upwards
-                    for (int i = 0; i < pieceLocation.second - newPieceLocation.second; i++)
+                    for (int i = 1; i < pieceLocation.second - newPieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first, pieceLocation.second - i)).getPieceType() == PieceType::EMPTY) {
@@ -937,7 +943,7 @@ public:
                 }
                 else {
                     //moving downwards
-                    for (int i = 0; i < pieceLocation.second - newPieceLocation.second; i++)
+                    for (int i = 1; i < pieceLocation.second - newPieceLocation.second; i++)
                     {
                         //check if empty
                         if (getPiece(std::make_pair(pieceLocation.first, pieceLocation.second + i)).getPieceType() == PieceType::EMPTY) {
