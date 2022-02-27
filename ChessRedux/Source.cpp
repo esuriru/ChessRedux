@@ -1,6 +1,8 @@
 #include <iostream>
 #include <array>
 #include <string>
+#include <vector>
+#include <string_view>
 
 enum class PieceType { PAWN, BISHOP, KNIGHT, ROOK, QUEEN, KING, EMPTY };
 enum class Colour { BLACK, WHITE, NIL };
@@ -980,7 +982,286 @@ private:
         Colour enemykingColour = (chessboard.getPiece(pieceLocation).getColour() == Colour::BLACK) ? Colour::WHITE : Colour::BLACK;
         return chessboard.isMoveLegal(newPieceLocation, chessboard.getKing(enemykingColour).getpieceLocation(), true);
     }
-    bool isMoveCheckMate(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {};
+    bool isMoveCheckmate(Colour colourincheck, std::pair<int, int> checkingPieceLocation) {
+        Colour checkedKingColour = (colourincheck == Colour::BLACK) ? Colour::WHITE : Colour::BLACK;
+        ChessPiece checkedKing = chessboard.getKing(checkedKingColour);
+        //check for a piece that can take the piece checking the king
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (chessboard.getBoard()[j][i].getColour() == colourincheck) {
+                    if (chessboard.getBoard()[j][i].getColour() == currentTurn) {
+                        if (chessboard.isMoveLegal(chessboard.getBoard()[j][i].getpieceLocation(), checkingPieceLocation, true) && std::make_pair(j, i) != checkingPieceLocation) {
+                            if (chessboard.getBoard()[j][i].getPieceType() == PieceType::KING) {
+                                //the king can take the piece, but will he still be in check?
+                                for (int m = 0; i < 8; i++)
+                                {
+                                    for (int n = 0; j < 8; j++)
+                                    {                                        
+                                        if (chessboard.getBoard()[j][i].getColour() != colourincheck) {
+                                            if (chessboard.isMoveLegal(chessboard.getBoard()[j][i].getpieceLocation(), checkingPieceLocation, true)) {
+                                                return true;
+                                            }
+                                            else continue;
+                                        }
+                                        else continue;
+
+                                    }
+                                }
+                            }
+                            //but, if he is not in check after that,
+                            return false;
+                        }
+                        else continue;
+                    }
+                    else continue;
+                }
+                else continue;
+            }
+        }
+        //now see if that piece can be blocked or the king can move away
+        std::vector<std::pair<int, int>> possiblekingLocations = {
+            std::make_pair(checkedKing.getpieceLocation().first + 1, checkedKing.getpieceLocation().second),
+            std::make_pair(checkedKing.getpieceLocation().first - 1, checkedKing.getpieceLocation().second),
+            std::make_pair(checkedKing.getpieceLocation().first, checkedKing.getpieceLocation().second + 1),
+            std::make_pair(checkedKing.getpieceLocation().first, checkedKing.getpieceLocation().second - 1),
+            std::make_pair(checkedKing.getpieceLocation().first + 1, checkedKing.getpieceLocation().second + 1),
+            std::make_pair(checkedKing.getpieceLocation().first + 1, checkedKing.getpieceLocation().second - 1),
+            std::make_pair(checkedKing.getpieceLocation().first - 1, checkedKing.getpieceLocation().second + 1),
+            std::make_pair(checkedKing.getpieceLocation().first - 1, checkedKing.getpieceLocation().second - 1),
+        };
+        //cleanup        
+        for (auto i = possiblekingLocations.begin(); i != possiblekingLocations.end();) {
+            if ((*i).first < 0 || (*i).first > 7 || (*i).second < 0 || (*i).second > 7) {
+                i = possiblekingLocations.erase(i);
+            }
+            else if (chessboard.getPiece((*i)).getColour() == colourincheck) {
+                i = possiblekingLocations.erase(i);
+            }
+            else {
+                ++i;
+            }
+        }
+
+        for (int i = 0; i < possiblekingLocations.size(); i++) {
+            if (chessboard.isMoveLegal(checkingPieceLocation, possiblekingLocations[i], true)) {
+                return true;
+            }
+        }
+        //find the movement between the checking piece and the king
+        std::vector<std::pair<int, int>> gridMovement;
+        switch (chessboard.getPiece(checkingPieceLocation).getPieceType()) {
+        case PieceType::KNIGHT:
+            //there is no movement that can be blocked, and since we ruled out it being taken, it's definitely checkmate
+            return true;
+            break;
+        case PieceType::BISHOP:
+        {
+            if (checkingPieceLocation.first > checkedKing.getpieceLocation().first) {
+                //moving to the left
+                if (checkingPieceLocation.second > checkedKing.getpieceLocation().second) {
+                    //moving upwards
+                    for (int i = 1; i < checkingPieceLocation.second - checkedKing.getpieceLocation().second; i++)
+                    {
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first - i, checkingPieceLocation.second - i));
+                    }
+
+                }
+                else {
+                    //moving downwards
+                    for (int i = 1; i < checkedKing.getpieceLocation().second - checkingPieceLocation.second; i++)
+                    {
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first - i, checkingPieceLocation.second + i));
+                    }
+
+                }
+            }
+            else {
+                //moving to the right
+                if (checkingPieceLocation.second > checkedKing.getpieceLocation().second) {
+                    //moving upwards
+                    for (int i = 1; i < checkingPieceLocation.second - checkedKing.getpieceLocation().second; i++)
+                    {
+                        //check if empty
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first + i, checkingPieceLocation.second - i));
+                    }
+
+                }
+                else {
+                    //moving downwards
+                    for (int i = 1; i < checkedKing.getpieceLocation().second - checkingPieceLocation.second; i++)
+                    {
+                        //check if empty
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first + i, checkingPieceLocation.second + i));
+
+                        // finally, if it is possible
+
+                    }
+                }
+                
+            }
+            break;
+        }
+        case PieceType::ROOK:
+        {
+            if (checkingPieceLocation.first == checkedKing.getpieceLocation().first) {
+                //moving on the y axis
+                if (checkingPieceLocation.second > checkedKing.getpieceLocation().second) {
+                    //moving upwards
+                    for (int i = 1; i < checkingPieceLocation.second - checkedKing.getpieceLocation().second; i++)
+                    {
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first, checkingPieceLocation.second - i));
+                    }
+
+                }
+                else {
+                    //moving downwards
+                    for (int i = 1; i < checkedKing.getpieceLocation().second - checkingPieceLocation.second; i++)
+                    {
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first, checkingPieceLocation.second + i));
+                    }
+
+                }
+            }
+            else {
+                //moving on the x axis
+                if (checkingPieceLocation.first > checkedKing.getpieceLocation().first) {
+                    //moving left
+                    for (int i = 1; i < checkingPieceLocation.first - checkedKing.getpieceLocation().first; i++)
+                    {
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first - i, checkingPieceLocation.second));
+                    }
+
+                }
+                else {
+                    //moving right
+                    for (int i = 1; i < checkedKing.getpieceLocation().first - checkingPieceLocation.first; i++)
+                    {                        
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first + i, checkingPieceLocation.second));
+                    }
+                }
+
+            }
+            break;
+        }
+        case PieceType::QUEEN: 
+        {
+            if (checkingPieceLocation.first > checkedKing.getpieceLocation().first) {
+                //moving to the left
+                if (checkingPieceLocation.second == checkedKing.getpieceLocation().second) {
+                    for (int i = 1; i < checkingPieceLocation.first - checkedKing.getpieceLocation().first; i++) {
+                        //check if empty
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first - i, checkingPieceLocation.second));
+                    }
+                }
+                else if (checkingPieceLocation.second > checkedKing.getpieceLocation().second) {
+                    //moving upwards
+                    for (int i = 1; i < checkingPieceLocation.second - checkedKing.getpieceLocation().second; i++)
+                    {
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first - i, checkingPieceLocation.second - i));
+                    }
+                    
+                }
+                else {
+                    //moving downwards
+                    for (int i = 1; i < checkedKing.getpieceLocation().second - checkingPieceLocation.second; i++)
+                    {                        
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first - i, checkingPieceLocation.second + i));
+                    }
+                    
+                }
+            }
+            else if (checkingPieceLocation.first < checkedKing.getpieceLocation().first) {
+                //moving to the right
+                if (checkingPieceLocation.second == checkedKing.getpieceLocation().second) {
+                    for (int i = 1; i < checkedKing.getpieceLocation().first - checkingPieceLocation.first; i++) {
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first + i, checkingPieceLocation.second));
+                                         
+                    }
+                }
+                if (checkingPieceLocation.second > checkedKing.getpieceLocation().second) {
+                    //moving upwards
+                    for (int i = 1; i < checkingPieceLocation.second - checkedKing.getpieceLocation().second; i++)
+                    {
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first + i, checkingPieceLocation.second - i));
+
+                        }        
+                    
+                    
+                }
+                else {
+                    //moving downwards
+                    for (int i = 1; i < checkedKing.getpieceLocation().second - checkingPieceLocation.second; i++)
+                    {
+                        //check if empty
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first + i, checkingPieceLocation.second + i));
+                        
+                    }
+
+                }
+            }
+            else if (checkingPieceLocation.first == checkedKing.getpieceLocation().first) {
+                //moving in the y-axis
+                if (checkingPieceLocation.second > checkedKing.getpieceLocation().second) {
+                    //moving upwards
+                    for (int i = 1; i < checkingPieceLocation.second - checkedKing.getpieceLocation().second; i++)
+                    {
+                        //check if empty
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first, checkingPieceLocation.second - i));
+                    }
+                    
+                }
+                else {
+                    //moving downwards
+                    for (int i = 1; i < checkingPieceLocation.second - checkedKing.getpieceLocation().second; i++)
+                    {
+                        
+                        gridMovement.push_back(std::make_pair(checkingPieceLocation.first, checkingPieceLocation.second + i));
+                            
+                    }
+                    
+                }
+            }
+            break;
+        }
+        case PieceType::PAWN:
+            //there is no intermediate movement between a pawn and a king, and since we ruled out it being taken, it's definitely checkmate
+            return true;
+        case PieceType::KING:
+            //There is no way this should be activated, send out an error message
+            std::cout << "Error!, check back at IsMoveCheckmate function";
+            break;
+        };
+        //do some cleanup
+        for (auto i = gridMovement.begin(); i != gridMovement.end();) {
+            if ((*i) == checkingPieceLocation || (*i) == checkedKing.getpieceLocation()) {
+                i = gridMovement.erase(i);
+            }            
+            else {
+                ++i;
+            }
+        }
+        //now, for those places of movement, find a piece that can block it
+        for (int grids = 0; grids < gridMovement.size(); grids++) {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {                    
+                    if (chessboard.getBoard()[j][i].getColour() == currentTurn) {
+                        if (chessboard.isMoveLegal(chessboard.getBoard()[j][i].getpieceLocation(), gridMovement[grids], false)) {
+                            return false;
+                        }
+                        else continue;
+                    }
+                    else continue;                    
+                }
+            }
+        }
+        //finally, with no pieces to block the path, with no pieces to take the checking piece, and the king not able to move anywhere, it is checkmate.
+        return true;
+    }
+
 
 public:
     void newGame() {
@@ -1351,7 +1632,13 @@ public:
         bool checkEvent = isMoveCheck(from.getpieceLocation(), newPieceLocation);
         if (checkEvent) {
             std::cout << "In check" << std::endl;
+            if (isMoveCheckmate(from.getColour(), newPieceLocation)) {
+                std::string output = (from.getColour() == Colour::WHITE) ? "White has won." : "Black has won.";
+                std::cout << output << std::endl;                 
+                gameRunning = false;
+            }
         }
+        
         switch (currentTurn) {
         case Colour::WHITE:
             currentTurn = Colour::BLACK;
