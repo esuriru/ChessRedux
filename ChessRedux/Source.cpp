@@ -79,7 +79,7 @@ public:
 class ChessBoard {
 private:
     ChessPiece arrayboard[8][8];
-
+    std::pair<int, int> latestMoveLocation;
 public:
     ChessBoard() {
         //create pieces
@@ -224,24 +224,21 @@ public:
         return arrayboard;
     }
     void movePiece(ChessPiece from, std::pair<int, int> newLocation) {
-        /*if (getPiece(newLocation).getPieceType() == PieceType::EMPTY) {
-            //to empty space
-            setPiece(from, newLocation);
-        }
-        else if (getPiece(newLocation).getColour() != from.getColour()) {
-            //taking another piece           
-            auto beforeLocation = from.getpieceLocation();
-            setPiece(from, newLocation);
-            setPiece(ChessPiece(), beforeLocation);
-        }*/
-
+        
         auto beforeLocation = from.getpieceLocation();
         setPiece(from, newLocation);
         
         setPiece(ChessPiece(), beforeLocation);
-        
+        latestMoveLocation = newLocation;
+    }
+    void epmovePiece(ChessPiece from, std::pair<int, int> newLocation, std::pair<int, int> takenPieceLocation) {
+        //for en passant
+        auto beforeLocation = from.getpieceLocation();
+        setPiece(from, newLocation);
 
-        
+        setPiece(ChessPiece(), takenPieceLocation);
+        setPiece(ChessPiece(), beforeLocation);
+        latestMoveLocation = newLocation;
     }
     ChessPiece getKing(Colour kingColour) {
         for (int i = 0; i < 8; i++) {
@@ -798,7 +795,9 @@ public:
         }
         case PieceType::PAWN: {
             if (takingPiece) {
+                
                 if (getPiece(pieceLocation).getColour() == Colour::WHITE) {
+                    //if (latestMoveLocation.second == 3 && getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN && )
                     if (std::make_pair(pieceLocation.first + 1, pieceLocation.second - 1) == newPieceLocation || std::make_pair(pieceLocation.first - 1, pieceLocation.second - 1) == newPieceLocation) {
                         return true;
                     }
@@ -977,6 +976,8 @@ private:
     ChessBoard chessboard;
     bool gameRunning;
     Colour currentTurn;
+    std::pair<int, int> latestMoveLocation;
+    
     
     bool isMoveCheck(std::pair<int, int> pieceLocation, std::pair<int, int> newPieceLocation) {
         Colour enemykingColour = (chessboard.getPiece(pieceLocation).getColour() == Colour::BLACK) ? Colour::WHITE : Colour::BLACK;
@@ -1329,98 +1330,318 @@ public:
                 }
             }
             else if (playerInput.length() == 4) {
+
                 if (playerInput[1] == 'x') {
                     std::pair<int, int>newLocation = std::make_pair(int(playerInput[2]) - 97, 8 - atoi(&playerInput[3]));
                     ChessPiece movingPiece;
-                    
+                    if (chessboard.getPiece(newLocation).getPieceType() != PieceType::EMPTY) {
+
+                        switch (playerInput[0]) {
+                        case 'B':
+                            movingPiece = findMovablePiece(PieceType::BISHOP, newLocation, true);
+                            if (movingPiece.getColour() == currentTurn) {
+                                makeMove(movingPiece, newLocation);
+                            }
+                            else {
+                                switch (currentTurn) {
+                                case Colour::WHITE:
+                                    std::cout << "It is currently white's turn" << std::endl;
+                                    break;
+                                case Colour::BLACK:
+                                    std::cout << "It is currently black's turn" << std::endl;
+                                    break;
+                                }
+                            }
+                            break;
+                        case 'K':
+                            movingPiece = findMovablePiece(PieceType::KING, newLocation, true);
+                            if (movingPiece.getColour() == currentTurn) {
+                                makeMove(movingPiece, newLocation);
+                            }
+                            else {
+                                switch (currentTurn) {
+                                case Colour::WHITE:
+                                    std::cout << "It is currently white's turn" << std::endl;
+                                    break;
+                                case Colour::BLACK:
+                                    std::cout << "It is currently black's turn" << std::endl;
+                                    break;
+                                }
+                            }
+
+                            break;
+                        case 'Q':
+                            movingPiece = findMovablePiece(PieceType::QUEEN, newLocation, true);
+                            if (movingPiece.getColour() == currentTurn) {
+                                makeMove(movingPiece, newLocation);
+                            }
+                            else {
+                                switch (currentTurn) {
+                                case Colour::WHITE:
+                                    std::cout << "It is currently white's turn" << std::endl;
+                                    break;
+                                case Colour::BLACK:
+                                    std::cout << "It is currently black's turn" << std::endl;
+                                    break;
+                                }
+                            }
+                            break;
+                        case 'N':
+                            movingPiece = findMovablePiece(PieceType::KNIGHT, newLocation, true);
+                            if (movingPiece.getColour() == currentTurn) {
+                                makeMove(movingPiece, newLocation);
+                            }
+                            else {
+                                switch (currentTurn) {
+                                case Colour::WHITE:
+                                    std::cout << "It is currently white's turn" << std::endl;
+                                    break;
+                                case Colour::BLACK:
+                                    std::cout << "It is currently black's turn" << std::endl;
+                                    break;
+                                }
+                            }
+                            break;
+                        case 'R':
+                            movingPiece = findMovablePiece(PieceType::ROOK, newLocation, true);
+                            if (movingPiece.getColour() == currentTurn) {
+                                makeMove(movingPiece, newLocation);
+                            }
+                            else {
+                                switch (currentTurn) {
+                                case Colour::WHITE:
+                                    std::cout << "It is currently white's turn" << std::endl;
+                                    break;
+                                case Colour::BLACK:
+                                    std::cout << "It is currently black's turn" << std::endl;
+                                    break;
+                                }
+                            }
+                            break;
+                        case 'a': {
+                            if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(0, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(0, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(0, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(0, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(0, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(0, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(0, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getBoard()[0][i], newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            break;
+                        }
+                        case 'b': {
+                            if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(1, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(1, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(1, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(1, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(1, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(1, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(1, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(1, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            break;
+                        }
+                        case 'c': {
+                            if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(2, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(2, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(2, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(2, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(2, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(2, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(2, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(2, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            break;
+                        }
+                        case 'd': {
+                            if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(3, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(3, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(3, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(3, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(3, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(3, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(3, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(3, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            break;
+                        }
+                        case 'e': {
+                            if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(4, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(4, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(4, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(4, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(4, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(4, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(4, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(4, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            break;
+                        }
+                        case 'f': {
+                            if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(5, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(5, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(5, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(5, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(5, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(5, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(5, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(5, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            break;
+                        }
+                        case 'g': {
+                            if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(6, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(6, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(6, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(6, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(6, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(6, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(6, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(6, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            break;
+                        }
+                        case 'h': {
+                            if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(7, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(7, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(7, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(7, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            else {
+                                for (int i = 0; i < 8; i++) {
+                                    if (chessboard.getPiece(std::make_pair(7, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(7, i)).getPieceType() == PieceType::PAWN) {
+                                        if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(7, i)).getpieceLocation(), newLocation, true)) {
+                                            makeMove(chessboard.getPiece(std::make_pair(7, i)), newLocation);
+                                        }
+                                        else continue;
+                                    }
+                                    else continue;
+                                }
+                            }
+                            break;
+                        }
+
+                        }
+                    }
+
+                    else {
+                        std::cout << "Invalid input" << std::endl;
+                        continue;
+                    }
+                }
+            }
+            else if (playerInput.length() == 9) {
+            //en passant
+            if (playerInput[1] == 'x' && playerInput[5] == 'e' && playerInput[6] == '.' && playerInput[7] == 'p' && playerInput[8] == '.') {
+                std::pair<int, int>newLocation = std::make_pair(int(playerInput[2]) - 97, 8 - atoi(&playerInput[3]));
+                ChessPiece movingPiece;
+                if (chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
                     switch (playerInput[0]) {
-                    case 'B':
-                        movingPiece = findMovablePiece(PieceType::BISHOP, newLocation, true);
-                        if (movingPiece.getColour() == currentTurn) {
-                            makeMove(movingPiece, newLocation);
-                        }
-                        else {
-                            switch (currentTurn) {
-                            case Colour::WHITE:
-                                std::cout << "It is currently white's turn" << std::endl;
-                                break;
-                            case Colour::BLACK:
-                                std::cout << "It is currently black's turn" << std::endl;
-                                break;
-                            }
-                        }
-                        break;
-                    case 'K':
-                        movingPiece = findMovablePiece(PieceType::KING, newLocation, true);
-                        if (movingPiece.getColour() == currentTurn) {
-                            makeMove(movingPiece, newLocation);
-                        }
-                        else {
-                            switch (currentTurn) {
-                            case Colour::WHITE:
-                                std::cout << "It is currently white's turn" << std::endl;
-                                break;
-                            case Colour::BLACK:
-                                std::cout << "It is currently black's turn" << std::endl;
-                                break;
-                            }
-                        }
-                        
-                        break;
-                    case 'Q':
-                        movingPiece = findMovablePiece(PieceType::QUEEN, newLocation, true);
-                        if (movingPiece.getColour() == currentTurn) {
-                            makeMove(movingPiece, newLocation);
-                        }
-                        else {
-                            switch (currentTurn) {
-                            case Colour::WHITE:
-                                std::cout << "It is currently white's turn" << std::endl;
-                                break;
-                            case Colour::BLACK:
-                                std::cout << "It is currently black's turn" << std::endl;
-                                break;
-                            }
-                        }
-                        break;
-                    case 'N':
-                        movingPiece = findMovablePiece(PieceType::KNIGHT, newLocation, true);
-                        if (movingPiece.getColour() == currentTurn) {
-                            makeMove(movingPiece, newLocation);
-                        }
-                        else {
-                            switch (currentTurn) {
-                            case Colour::WHITE:
-                                std::cout << "It is currently white's turn" << std::endl;
-                                break;
-                            case Colour::BLACK:
-                                std::cout << "It is currently black's turn" << std::endl;
-                                break;
-                            }
-                        }
-                        break;
-                    case 'R':
-                        movingPiece = findMovablePiece(PieceType::ROOK, newLocation, true);
-                        if (movingPiece.getColour() == currentTurn) {
-                            makeMove(movingPiece, newLocation);
-                        }
-                        else {
-                            switch (currentTurn) {
-                            case Colour::WHITE:
-                                std::cout << "It is currently white's turn" << std::endl;
-                                break;
-                            case Colour::BLACK:
-                                std::cout << "It is currently black's turn" << std::endl;
-                                break;
-                            }
-                        }
-                        break;
+
                     case 'a': {
-                        if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                        if (chessboard.getPiece(latestMoveLocation).getColour() == Colour::WHITE && latestMoveLocation.second == 4) {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(0, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(0, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(0, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(0, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(0, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(0, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1430,8 +1651,8 @@ public:
                         else {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(0, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(0, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(0, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getBoard()[0][i], newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(0, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getBoard()[0][i], newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1441,11 +1662,11 @@ public:
                         break;
                     }
                     case 'b': {
-                        if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                        if (chessboard.getPiece(latestMoveLocation).getColour() == Colour::WHITE && latestMoveLocation.second == 4) {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(1, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(1, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(1, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(1, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(1, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(1, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1455,8 +1676,8 @@ public:
                         else {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(1, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(1, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(1, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(1, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(1, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(1, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1466,11 +1687,11 @@ public:
                         break;
                     }
                     case 'c': {
-                        if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                        if (chessboard.getPiece(latestMoveLocation).getColour() == Colour::WHITE && latestMoveLocation.second == 4) {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(2, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(2, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(2, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(2, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(2, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(2, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1480,8 +1701,8 @@ public:
                         else {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(2, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(2, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(2, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(2, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(2, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(2, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1491,11 +1712,11 @@ public:
                         break;
                     }
                     case 'd': {
-                        if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                        if (chessboard.getPiece(latestMoveLocation).getColour() == Colour::WHITE && latestMoveLocation.second == 4) {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(3, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(3, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(3, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(3, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(3, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(3, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1505,8 +1726,8 @@ public:
                         else {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(3, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(3, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(3, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(3, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(3, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(3, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1516,11 +1737,11 @@ public:
                         break;
                     }
                     case 'e': {
-                        if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                        if (chessboard.getPiece(latestMoveLocation).getColour() == Colour::WHITE && latestMoveLocation.second == 4) {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(4, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(4, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(4, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(4, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(4, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(4, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1530,8 +1751,8 @@ public:
                         else {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(4, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(4, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(4, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(4, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(4, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(4, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1541,11 +1762,11 @@ public:
                         break;
                     }
                     case 'f': {
-                        if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                        if (chessboard.getPiece(latestMoveLocation).getColour() == Colour::WHITE && latestMoveLocation.second == 4) {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(5, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(5, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(5, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(5, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(5, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(5, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1555,8 +1776,8 @@ public:
                         else {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(5, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(5, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(5, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(5, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(5, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(5, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1566,11 +1787,11 @@ public:
                         break;
                     }
                     case 'g': {
-                        if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                        if (chessboard.getPiece(latestMoveLocation).getColour() == Colour::WHITE && latestMoveLocation.second == 4) {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(6, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(6, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(6, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(6, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(6, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(6, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1580,8 +1801,8 @@ public:
                         else {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(6, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(6, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(6, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(6, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(6, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(6, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1591,11 +1812,11 @@ public:
                         break;
                     }
                     case 'h': {
-                        if (chessboard.getPiece(newLocation).getColour() == Colour::WHITE) {
+                        if (chessboard.getPiece(latestMoveLocation).getColour() == Colour::WHITE && latestMoveLocation.second == 4) {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(7, i)).getColour() == Colour::BLACK && chessboard.getPiece(std::make_pair(7, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(7, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(7, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(7, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(7, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1605,8 +1826,8 @@ public:
                         else {
                             for (int i = 0; i < 8; i++) {
                                 if (chessboard.getPiece(std::make_pair(7, i)).getColour() == Colour::WHITE && chessboard.getPiece(std::make_pair(7, i)).getPieceType() == PieceType::PAWN) {
-                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(7, i)).getpieceLocation(), newLocation, true)) {
-                                        makeMove(chessboard.getPiece(std::make_pair(7, i)), newLocation);
+                                    if (chessboard.isMoveLegal(chessboard.getPiece(std::make_pair(7, i)).getpieceLocation(), newLocation, true) && chessboard.getPiece(latestMoveLocation).getPieceType() == PieceType::PAWN) {
+                                        epmakeMove(chessboard.getPiece(std::make_pair(7, i)), newLocation, latestMoveLocation);
                                     }
                                     else continue;
                                 }
@@ -1618,11 +1839,12 @@ public:
 
                     }
                 }
-                else {
-                    std::cout << "Invalid input" << std::endl;
-                    continue;
-                }
             }
+                }
+                else {
+                std::cout << "Invalid input" << std::endl;
+                continue;
+}
         }
     }
     void makeMove(ChessPiece from, std::pair<int, int> newPieceLocation) {        
@@ -1638,7 +1860,7 @@ public:
                 gameRunning = false;
             }
         }
-        
+        latestMoveLocation = newPieceLocation;
         switch (currentTurn) {
         case Colour::WHITE:
             currentTurn = Colour::BLACK;
@@ -1648,6 +1870,30 @@ public:
             break;
         }
     }
+    void epmakeMove(ChessPiece from, std::pair<int, int> newPieceLocation, std::pair<int, int> takenPieceLocation) {
+        chessboard.epmovePiece(from, newPieceLocation, takenPieceLocation);
+        chessboard.resetBoard();
+        chessboard.showBoard();
+        bool checkEvent = isMoveCheck(from.getpieceLocation(), newPieceLocation);
+        if (checkEvent) {
+            std::cout << "In check" << std::endl;
+            if (isMoveCheckmate(from.getColour(), newPieceLocation)) {
+                std::string output = (from.getColour() == Colour::WHITE) ? "White has won." : "Black has won.";
+                std::cout << output << std::endl;
+                gameRunning = false;
+            }
+        }
+        latestMoveLocation = newPieceLocation;
+        switch (currentTurn) {
+        case Colour::WHITE:
+            currentTurn = Colour::BLACK;
+            break;
+        case Colour::BLACK:
+            currentTurn = Colour::WHITE;
+            break;
+        }
+    }
+
     ChessPiece findMovablePiece(PieceType pt, std::pair<int, int> newPieceLocation, bool takingPiece) {        
             for (int i = 0; i < 8; i++)
             {
