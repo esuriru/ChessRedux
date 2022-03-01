@@ -240,6 +240,22 @@ public:
         setPiece(ChessPiece(), beforeLocation);
         latestMoveLocation = newLocation;
     }
+    void castle(ChessPiece king, ChessPiece teammate, bool Kingside) {
+        auto kingBeforeLocation = king.getpieceLocation();
+        auto teammateBeforeLocation = teammate.getpieceLocation();
+        if (Kingside) {
+            setPiece(king, std::make_pair(kingBeforeLocation.first + 2, kingBeforeLocation.second));
+            setPiece(teammate, std::make_pair(teammateBeforeLocation.first - 2, teammateBeforeLocation.second));
+            setPiece(ChessPiece(), kingBeforeLocation);
+            setPiece(ChessPiece(), teammateBeforeLocation);
+        }
+        else {
+            setPiece(king, std::make_pair(kingBeforeLocation.first - 2, kingBeforeLocation.second));
+            setPiece(teammate, std::make_pair(teammateBeforeLocation.first + 3, teammateBeforeLocation.second));
+            setPiece(ChessPiece(), kingBeforeLocation);
+            setPiece(ChessPiece(), teammateBeforeLocation);
+        }
+    }
     ChessPiece getKing(Colour kingColour) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -1293,39 +1309,67 @@ public:
                 }
             }
             else if (playerInput.length() == 3) {
-                std::pair<int, int>newLocation = std::make_pair(int(playerInput[1]) - 97, 8 - atoi(&playerInput[2]));
-                ChessPiece movingPiece;
-                switch (playerInput[0]) {
-                case 'B':
-                    movingPiece = findMovablePiece(PieceType::BISHOP, newLocation, false);
-                    break;
-                case 'K':
-                    movingPiece = findMovablePiece(PieceType::KING, newLocation, false);
-                    break;
-                case 'Q':
-                    movingPiece = findMovablePiece(PieceType::QUEEN, newLocation, false);
-                    break;
-                case 'N':
-                    movingPiece = findMovablePiece(PieceType::KNIGHT, newLocation, false);
-                    break;
-                case 'R':
-                    movingPiece = findMovablePiece(PieceType::ROOK, newLocation, false);
-                    break;
-                default:
-                    std::cout << "Invalid input" << std::endl;
-                    continue;
-                }
-                if (movingPiece.getColour() == currentTurn) {
-                    makeMove(movingPiece, newLocation);
-                }
-                else {
-                    switch (currentTurn) {
+                if (playerInput == "0-0") {
+                    //king side castling
+                    std::pair<int, int>kingLocation = chessboard.getKing(currentTurn).getpieceLocation();
+                    std::pair<int, int>rookLocation = std::make_pair(kingLocation.first + 3, kingLocation.second);
+                    switch (currentTurn){
                     case Colour::WHITE:
-                        std::cout << "It is currently white's turn" << std::endl;
+                        
+                        if (kingLocation == std::make_pair(4, 7) && latestMoveLocation != std::make_pair(4, 7) && rookLocation == std::make_pair(7, 7) && latestMoveLocation != std::make_pair(7, 7) && chessboard.getPiece(std::make_pair(5, 7)).getPieceType() == PieceType::EMPTY && chessboard.getPiece(std::make_pair(6, 7)).getPieceType() == PieceType::EMPTY) {
+                            castleMove(chessboard.getPiece(kingLocation), chessboard.getPiece(rookLocation), true);
+                        }
+                        else {
+                            std::cout << "Castling could not be done." << std::endl;
+                        }
                         break;
                     case Colour::BLACK:
-                        std::cout << "It is currently black's turn" << std::endl;
+                        if (kingLocation == std::make_pair(4, 0) && latestMoveLocation != std::make_pair(4, 0) && rookLocation == std::make_pair(7, 0) && latestMoveLocation != std::make_pair(7, 0) && chessboard.getPiece(std::make_pair(5, 0)).getPieceType() == PieceType::EMPTY && chessboard.getPiece(std::make_pair(6, 0)).getPieceType() == PieceType::EMPTY) {
+                            castleMove(chessboard.getPiece(kingLocation), chessboard.getPiece(rookLocation), true);
+                        }
+                        else {
+                            std::cout << "Castling could not be done." << std::endl;
+                        }
                         break;
+                    }
+                    continue;
+                }
+                else {
+                    std::pair<int, int>newLocation = std::make_pair(int(playerInput[1]) - 97, 8 - atoi(&playerInput[2]));
+                    ChessPiece movingPiece;
+                    switch (playerInput[0]) {
+
+                    case 'B':
+                        movingPiece = findMovablePiece(PieceType::BISHOP, newLocation, false);
+                        break;
+                    case 'K':
+                        movingPiece = findMovablePiece(PieceType::KING, newLocation, false);
+                        break;
+                    case 'Q':
+                        movingPiece = findMovablePiece(PieceType::QUEEN, newLocation, false);
+                        break;
+                    case 'N':
+                        movingPiece = findMovablePiece(PieceType::KNIGHT, newLocation, false);
+                        break;
+                    case 'R':
+                        movingPiece = findMovablePiece(PieceType::ROOK, newLocation, false);
+                        break;
+                    default:
+                        std::cout << "Invalid input" << std::endl;
+                        continue;
+                    }
+                    if (movingPiece.getColour() == currentTurn) {
+                        makeMove(movingPiece, newLocation);
+                    }
+                    else {
+                        switch (currentTurn) {
+                        case Colour::WHITE:
+                            std::cout << "It is currently white's turn" << std::endl;
+                            break;
+                        case Colour::BLACK:
+                            std::cout << "It is currently black's turn" << std::endl;
+                            break;
+                        }
                     }
                 }
             }
@@ -1628,6 +1672,36 @@ public:
                     }
                 }
             }
+            else if (playerInput.length() == 5) {
+            if (playerInput == "0-0-0") {
+                std::pair<int, int>kingLocation = chessboard.getKing(currentTurn).getpieceLocation();
+                std::pair<int, int>rookLocation = std::make_pair(kingLocation.first - 4, kingLocation.second);
+                switch (currentTurn) {
+                case Colour::WHITE:
+
+                    if (kingLocation == std::make_pair(4, 7) && latestMoveLocation != std::make_pair(4, 7) && rookLocation == std::make_pair(0, 7) && latestMoveLocation != std::make_pair(0, 7) && chessboard.getPiece(std::make_pair(1, 7)).getPieceType() == PieceType::EMPTY && chessboard.getPiece(std::make_pair(2, 7)).getPieceType() == PieceType::EMPTY && chessboard.getPiece(std::make_pair(3, 7)).getPieceType() == PieceType::EMPTY)  {
+                        castleMove(chessboard.getPiece(kingLocation), chessboard.getPiece(rookLocation), false);
+                    }
+                    else {
+                        std::cout << "Castling could not be done." << std::endl;
+                    }
+                    break;
+                case Colour::BLACK:
+                    if (kingLocation == std::make_pair(4, 0) && latestMoveLocation != std::make_pair(4, 0) && rookLocation == std::make_pair(0, 0) && latestMoveLocation != std::make_pair(0, 0) && chessboard.getPiece(std::make_pair(1, 0)).getPieceType() == PieceType::EMPTY && chessboard.getPiece(std::make_pair(2, 0)).getPieceType() == PieceType::EMPTY && chessboard.getPiece(std::make_pair(3, 0)).getPieceType() == PieceType::EMPTY) {
+                        castleMove(chessboard.getPiece(kingLocation), chessboard.getPiece(rookLocation), false);
+                    }
+                    else {
+                        std::cout << "Castling could not be done." << std::endl;
+                    }
+                    break;
+                }
+                continue;
+            }
+            else {
+                std::cout << "Invalid input" << std::endl;
+                continue;
+            }
+}
             else if (playerInput.length() == 9) {
             //en passant
             if (playerInput[1] == 'x' && playerInput[5] == 'e' && playerInput[6] == '.' && playerInput[7] == 'p' && playerInput[8] == '.') {
@@ -1884,6 +1958,45 @@ public:
             }
         }
         latestMoveLocation = newPieceLocation;
+        switch (currentTurn) {
+        case Colour::WHITE:
+            currentTurn = Colour::BLACK;
+            break;
+        case Colour::BLACK:
+            currentTurn = Colour::WHITE;
+            break;
+        }
+    }
+    void castleMove(ChessPiece king, ChessPiece teammate, bool kingSide) {
+        if (kingSide) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (chessboard.getBoard()[j][i].getPieceType() != PieceType::EMPTY && chessboard.getBoard()[j][i].getColour() != king.getColour() && chessboard.isMoveLegal(chessboard.getBoard()[j][i].getpieceLocation(), std::make_pair(king.getpieceLocation().first + 2, king.getpieceLocation().second), true)) {
+                        //the castle will put the king in check, so it's not possible.
+                        std::cout << "Castle not possible" << std::endl;
+                        return;
+                    }
+                    else continue;
+                }
+            }
+            chessboard.castle(king, teammate, kingSide);
+        }
+        else {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (chessboard.getBoard()[j][i].getPieceType() != PieceType::EMPTY && chessboard.getBoard()[j][i].getColour() != king.getColour() && chessboard.isMoveLegal(chessboard.getBoard()[j][i].getpieceLocation(), std::make_pair(king.getpieceLocation().first - 2, king.getpieceLocation().second), true)) {
+                        //the castle will put the king in check, so it's not possible.
+                        std::cout << "Castle not possible" << std::endl;
+                        return;
+                    }
+                    else continue;
+                }
+            }
+            chessboard.castle(king, teammate, kingSide);
+        }
+        chessboard.resetBoard();
+        chessboard.showBoard();
+        latestMoveLocation = std::make_pair(NULL, NULL);
         switch (currentTurn) {
         case Colour::WHITE:
             currentTurn = Colour::BLACK;
