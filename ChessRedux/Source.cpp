@@ -1361,26 +1361,32 @@ public:
                     continue;
                 }
                 else {
-                    std::pair<int, int>newLocation = std::make_pair(int(playerInput[0]) - 97, 8 - atoi(&playerInput[1]));
+                    std::pair<int, int>newLocation = std::make_pair(int(playerInput[1]) - 97, 8 - atoi(&playerInput[2]));
                     ChessPiece movingPiece;
                     switch (playerInput[0]) {
 
                     case 'B':
+                        
                         movingPiece = findMovablePiece(PieceType::BISHOP, newLocation, false);
                         break;
                     case 'K':
+                        
                         movingPiece = findMovablePiece(PieceType::KING, newLocation, false);
                         break;
                     case 'Q':
+                        
                         movingPiece = findMovablePiece(PieceType::QUEEN, newLocation, false);
                         break;
                     case 'N':
+                        
                         movingPiece = findMovablePiece(PieceType::KNIGHT, newLocation, false);
                         break;
                     case 'R':
+                        
                         movingPiece = findMovablePiece(PieceType::ROOK, newLocation, false);
                         break;
                     default:
+                        newLocation = std::make_pair(int(playerInput[0]) - 97, 8 - atoi(&playerInput[1]));
                         switch (currentTurn) {
                         case Colour::WHITE:
                             if (newLocation.second == 0) {
@@ -1406,6 +1412,10 @@ public:
 
                                 }
                             }
+                            else {
+                                std::cout << "Invalid movement" << std::endl;
+                                continue;
+                            }
                         case Colour::BLACK:
                             if (newLocation.second == 7) {
                                 //promotion by movement
@@ -1429,6 +1439,10 @@ public:
                                     continue;
 
                                 }
+                            }
+                            else {
+                                std::cout << "Invalid movement" << std::endl;
+                                continue;
                             }
                         }
                     }
@@ -2355,6 +2369,9 @@ public:
 };
 
 int main() {
-    ChessGame game;
+    std::cout << "Welcome to chess!\nUse normal chess algebraic notation.\nTo enter the game, just hit enter! (Remember white starts first)" << std::endl;
+    std::cin.get();
+    system("cls");
+    ChessGame game;   
     game.newGame();
 }
